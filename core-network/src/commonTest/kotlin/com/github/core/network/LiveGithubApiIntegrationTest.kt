@@ -15,10 +15,14 @@ class LiveGithubApiIntegrationTest {
      * Sends an ACTUAL LIVE HTTP request over the internet to GitHub's REST API:
      * GET https://api.github.com/search/repositories?q=kotlin&sort=stars&order=desc&page=1&per_page=3
      *
-     * ⚠️ CI/CD NOTE:
-     * Uncomment `@Ignore` before pushing to CI to avoid burning GitHub unauthenticated rate limits.
+     * ⚠️ NOTE:
+     * Keep `@Ignore` enabled so offline builds and CI/CD pipelines run fast and do not hit
+     * GitHub rate limits.
+     *
+     * To run this live test against real GitHub servers on your Mac, run:
+     * `./gradlew :core-network:testAndroidHostTest --rerun-tasks`
      */
-    // @Ignore
+    @Ignore // <-- Keep enabled for CI/CD. Run via :core-network:testAndroidHostTest
     @Test
     fun testLiveGithubSearchApiCall() = runTest {
         println("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
