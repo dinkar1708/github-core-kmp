@@ -11,6 +11,9 @@ import com.github.core.network.dto.RepositoryDto
 import com.github.core.network.dto.SearchRepositoriesResponseDto
 import com.github.core.network.dto.UserDto
 import com.github.core.network.mapper.toDomain
+import com.github.core.network.resilience.CircuitBreaker
+import com.github.core.network.resilience.RateLimitTracker
+import com.github.core.network.resilience.RetryPolicy
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -20,7 +23,10 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 
 class GithubApiService(
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    val circuitBreaker: CircuitBreaker = CircuitBreaker(),
+    val retryPolicy: RetryPolicy = RetryPolicy(),
+    val rateLimitTracker: RateLimitTracker = RateLimitTracker()
 ) : GithubRepository {
 
     override suspend fun searchRepositories(
@@ -29,7 +35,7 @@ class GithubApiService(
         sortOrder: SortOrder,
         page: Int,
         perPage: Int
-    ): Result<SearchResult<Repository>> = executeRequest {
+    ): Result<SearchResult<Repository>> = executeResilientRequest("searchRepositories") {
         httpClient.get("search/repositories") {
             parameter("q", query)
             parameter("sort", sortField.paramValue)
@@ -45,7 +51,7 @@ class GithubApiService(
     override suspend fun getRepositoryDetail(
         owner: String,
         repo: String
-    ): Result<Repository> = executeRequest {
+    ): Result<Repository> = executeResilientRequest("getRepositoryDetail($owner/$repo)") {
         httpClient.get("repos/$owner/$repo")
     }.map { response ->
         val dto: RepositoryDto = response.body()
@@ -56,7 +62,7 @@ class GithubApiService(
         username: String,
         page: Int,
         perPage: Int
-    ): Result<List<Repository>> = executeRequest {
+    ): Result<List<Repository>> = executeResilientRequest("getUserRepositories($username)") {
         httpClient.get("users/$username/repos") {
             parameter("page", page)
             parameter("per_page", perPage)
@@ -69,16 +75,42 @@ class GithubApiService(
 
     override suspend fun getUserProfile(
         username: String
-    ): Result<User> = executeRequest {
+    ): Result<User> = executeResilientRequest("getUserProfile($username)") {
         httpClient.get("users/$username")
     }.map { response ->
         val dto: UserDto = response.body()
         dto.toDomain()
     }
 
-    private suspend fun executeRequest(block: suspend () -> HttpResponse): Result<HttpResponse> {
+    private suspend fun executeResilientRequest(
+        operationName: String,
+        block: suspend () -> HttpResponse
+    ): Result<HttpResponse> {
+        // Fast-fail if local rate-limit tracker knows quota is exhausted
+        if (rateLimitTracker.isRateLimited()) {
+            val status = rateLimitTracker.currentStatus
+            val seconds = status?.secondsUntilReset ?: 0L
+            return Result.failure(
+                DomainError.RateLimitExceededError(
+                    resetTimeSeconds = seconds,
+                    message = "GitHub API rate limit exhausted. Resets in ${seconds}s."
+                )
+            )
+        }
+
+        // Execute through Circuit Breaker and Exponential Backoff Retry Policy
+        return circuitBreaker.execute {
+            retryPolicy.execute(operationName) { attempt ->
+                executeRawRequest(block)
+            }
+        }
+    }
+
+    private suspend fun executeRawRequest(block: suspend () -> HttpResponse): Result<HttpResponse> {
         return try {
             val response = block()
+            rateLimitTracker.updateFromHeaders(response.headers)
+
             if (response.status.isSuccess()) {
                 Result.success(response)
             } else {
@@ -98,7 +130,7 @@ class GithubApiService(
         } catch (e: Throwable) {
             Result.failure(
                 DomainError.NetworkError(
-                    message = e.message ?: "Network call failed",
+                    message = e.message ?: "Network request failed",
                     statusCode = null
                 )
             )
