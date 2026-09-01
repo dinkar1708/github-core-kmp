@@ -45,6 +45,32 @@ Forcing Kotlin `StateFlow` or `ViewModels` onto iOS and Flutter teams often crea
 
 ---
 
+## 🗺️ Architectural Build Sequence (Clean Architecture Order)
+
+In accordance with Clean Architecture principles (dependencies point strictly inwards), the SDK modules are developed and layered in the following sequential order:
+
+```text
+  1️⃣ :core-domain (Foundation Contracts)
+        ▲
+        ├── 2️⃣ :core-network (Remote Data Source & Ktor Client)
+        │
+        └── 3️⃣ :core-cache   (Local Data Source & SQLite DB)
+        ▲
+  4️⃣ :core-apm   (Independent Telemetry & Metric Spans)
+        ▲
+  5️⃣ :github-core (Public SDK Facade & Framework Assembly)
+```
+
+| Step | Module | Why in this Order? |
+| :---: | :--- | :--- |
+| **1️⃣** | [**:core-domain**](./core-domain/README.md) | **Core Foundation:** Establishes pure data entities, input validations, repository contracts, and Use Cases. Zero external dependencies. |
+| **2️⃣** | [**:core-network**](./core-network/README.md) | **Remote Data:** Implements Ktor client, serialization, circuit breaker, retry policies, and maps network DTOs to `:core-domain` models. |
+| **3️⃣** | [**:core-cache**](./core-cache/README.md) | **Offline Storage:** Implements local SQLite persistence, TTL freshness checks, LRU cache eviction, and maps cache entities to `:core-domain`. |
+| **4️⃣** | [**:core-apm**](./core-apm/README.md) | **Observability:** Custom execution `TraceTimer` and batched `MetricDispatcher` to track network/cache latency across all platforms. |
+| **5️⃣** | [**:github-core**](./github-core/README.md) | **Public Distribution:** Aggregates all modules into a single entrypoint (`GithubCoreSdk`) and builds `GithubCoreKMP.xcframework` (iOS) & Android AAR. |
+
+---
+
 ## 📦 Modular Architecture
 
 | Module | Documentation | Responsibilities | Standard Run | Force Re-run & Live Logs |
@@ -93,7 +119,18 @@ For detailed integration guides and code samples for each frontend platform, see
 ./gradlew check --rerun-tasks
 ```
 
-### 2. Run Tests for an Individual Module (with Live Logs)
+### 2. Network Testing: Mock vs. Real Live API Call
+
+* **🛡️ Run Offline / Mock Tests (CI/CD Safe):**
+  ```bash
+  ./gradlew :core-network:allTests --rerun-tasks
+  ```
+* **📡 Run Real Live API Call (Hits `api.github.com` over the internet):**
+  ```bash
+  ./gradlew :core-network:testAndroidHostTest --rerun-tasks
+  ```
+
+### 3. Run Tests for an Individual Module (with Live Logs)
 ```bash
 # 1. Pure Domain Logic Tests
 ./gradlew :core-domain:allTests --rerun-tasks
