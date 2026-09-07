@@ -1,6 +1,8 @@
-# 🤖 Android KMP Usage & Sample App Guide
+# 🤖 2. Share logic but keep UI native — Android Guide
 
-A concise guide to integrating the headless **`github-core-kmp`** SDK into an Android application, using [`sample/sample-android`](../sample/sample-android) as the reference.
+> 🔗 **Official JetBrains Documentation:** [Choose what to share: Share logic but keep UI native](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)
+
+A concise guide to integrating the headless **`github-core-kmp`** SDK into an Android application, using [`sample/sample-share-logic-native-ui-android`](../../sample/sample-share-logic-native-ui-android) as the reference.
 
 ---
 
@@ -9,7 +11,7 @@ A concise guide to integrating the headless **`github-core-kmp`** SDK into an An
 The shared SDK engine provides business logic, data models, networking, and caching, while the Android application retains full control over native UI and presentation state:
 
 * **SDK (`github-core-kmp`):** Domain models, validation rules, use cases, Ktor HTTP client (OkHttp engine), cache, and APM telemetry.
-* **Android App (`sample-android`):** Jetpack Compose UI, coroutines, and Material 3 presentation state.
+* **Android App (`sample-share-logic-native-ui-android`):** Jetpack Compose UI, coroutines, and Material 3 presentation state.
 * **Strict Boundary:** No UI components, ViewModels, or platform presentation state inside the shared KMP engine.
 
 > [!NOTE]
@@ -20,7 +22,7 @@ The shared SDK engine provides business logic, data models, networking, and cach
 ## 🏛️ Packaging & Linking Type: Static vs. Dynamic
 
 ### Configuration
-In [`github-core/build.gradle.kts`](../github-core/build.gradle.kts), the Android target is packaged as an **Android Archive (AAR)** using the Android Multiplatform Library plugin:
+In [`github-core/build.gradle.kts`](../../github-core/build.gradle.kts), the Android target is packaged as an **Android Archive (AAR)** using the Android Multiplatform Library plugin:
 
 ```kotlin
 plugins {
@@ -48,7 +50,7 @@ android {
 ## 📦 Build Setup & Configuration
 
 ### 1. Gradle Dependency
-Add the SDK dependency to your application module ([`sample/sample-android/app/build.gradle.kts`](../sample/sample-android/app/build.gradle.kts)):
+Add the SDK dependency to your application module ([`sample/sample-share-logic-native-ui-android/app/build.gradle.kts`](../../sample/sample-share-logic-native-ui-android/app/build.gradle.kts)):
 
 ```kotlin
 dependencies {
@@ -57,7 +59,7 @@ dependencies {
 ```
 
 ### 2. Composite Build Substitution
-In [`sample/sample-android/settings.gradle.kts`](../sample/sample-android/settings.gradle.kts), link the local multiplatform project:
+In [`sample/sample-share-logic-native-ui-android/settings.gradle.kts`](../../sample/sample-share-logic-native-ui-android/settings.gradle.kts), link the local multiplatform project:
 
 ```kotlin
 includeBuild("../../") {
@@ -69,7 +71,7 @@ includeBuild("../../") {
 *(For remote consumption, replace the `includeBuild` block with your Maven/GitHub Packages repository credentials).*
 
 ### 3. Android Network Permission
-In [`sample/sample-android/app/src/main/AndroidManifest.xml`](../sample/sample-android/app/src/main/AndroidManifest.xml):
+In [`sample/sample-share-logic-native-ui-android/app/src/main/AndroidManifest.xml`](../../sample/sample-share-logic-native-ui-android/app/src/main/AndroidManifest.xml):
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
@@ -82,12 +84,12 @@ In [`sample/sample-android/app/src/main/AndroidManifest.xml`](../sample/sample-a
 ### Clean Behavior
 * **Automatic Recompilation via Composite Builds:** Because Android utilizes Gradle Composite Builds (`includeBuild("../../")`), Gradle treats the KMP project as an active source dependency.
 * If you run `./gradlew clean` in the root repository, all generated `build/` artifacts are wiped.
-* When you next execute `./gradlew assembleDebug` in `sample-android`, Gradle automatically detects that the SDK artifacts are missing and recompiles the entire KMP engine on the fly.
+* When you next execute `./gradlew assembleDebug` in `sample-share-logic-native-ui-android`, Gradle automatically detects that the SDK artifacts are missing and recompiles the entire KMP engine on the fly.
 
 ### How to Rebuild
 ```bash
 # Rebuild and assemble Android sample APK
-cd sample/sample-android && ./gradlew assembleDebug
+cd sample/sample-share-logic-native-ui-android && ./gradlew assembleDebug
 ```
 No manual linking or pre-compilation step is required for Android.
 
@@ -111,7 +113,7 @@ No manual linking or pre-compilation step is required for Android.
 The Android sample app is organized into dedicated components matching clean architecture boundaries:
 
 ```text
-sample/sample-android/app/src/main/java/com/sample/android/
+sample/sample-share-logic-native-ui-android/app/src/main/java/com/sample/android/
 ├── MainActivity.kt               # Root Activity hosting the search screen
 └── search/
     ├── RepoSearchScreen.kt       # Screen container with search bar, states & LazyColumn
@@ -119,7 +121,7 @@ sample/sample-android/app/src/main/java/com/sample/android/
 ```
 
 ### 1. Root Host View
-In [`MainActivity.kt`](../sample/sample-android/app/src/main/java/com/sample/android/MainActivity.kt):
+In [`MainActivity.kt`](../../sample/sample-share-logic-native-ui-android/app/src/main/java/com/sample/android/MainActivity.kt):
 
 ```kotlin
 class MainActivity : ComponentActivity() {
@@ -144,7 +146,7 @@ class MainActivity : ComponentActivity() {
 ```
 
 ### 2. State & ViewModel Management
-In [`RepoSearchScreen.kt`](../sample/sample-android/app/src/main/java/com/sample/android/search/RepoSearchScreen.kt):
+In [`RepoSearchScreen.kt`](../../sample/sample-share-logic-native-ui-android/app/src/main/java/com/sample/android/search/RepoSearchScreen.kt):
 
 ```kotlin
 var query by remember { mutableStateOf("kotlin") }
@@ -171,7 +173,7 @@ fun performSearch(searchQuery: String) {
 ```
 
 ### 3. Screen Container
-In [`RepoSearchScreen.kt`](../sample/sample-android/app/src/main/java/com/sample/android/search/RepoSearchScreen.kt):
+In [`RepoSearchScreen.kt`](../../sample/sample-share-logic-native-ui-android/app/src/main/java/com/sample/android/search/RepoSearchScreen.kt):
 
 ```kotlin
 Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
@@ -195,7 +197,7 @@ Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
 ```
 
 ### 4. Item Row Component
-In [`RepositoryItem.kt`](../sample/sample-android/app/src/main/java/com/sample/android/search/RepositoryItem.kt):
+In [`RepositoryItem.kt`](../../sample/sample-share-logic-native-ui-android/app/src/main/java/com/sample/android/search/RepositoryItem.kt):
 
 ```kotlin
 @Composable
@@ -233,7 +235,7 @@ result.onFailure { error ->
 
 ```bash
 # 1. Build the Android sample application APK
-cd sample/sample-android && ./gradlew assembleDebug
+cd sample/sample-share-logic-native-ui-android && ./gradlew assembleDebug
 
 # 2. Install and launch on a connected device/emulator
 ./gradlew installDebug
