@@ -1,57 +1,87 @@
-# 🚀 `:github-core` (Umbrella SDK Module)
+# 🚀 `:github-core`
 
-The **public facade and framework distribution module** for the GitHub Core KMP SDK.
-
----
-
-## 🎯 Architectural Responsibility & Boundary
-
-* **Unified SDK Entrypoint:** Aggregates `:core-domain`, `:core-network`, `:core-cache`, and `:core-apm`.
-* **Framework Packaging (iOS / SPM):** Produces `GithubCoreKMP.xcframework` / static framework exporting all public domain models, Use Cases, and APM configurations.
-* **Android Library Packaging (AAR / Maven):** Configured for Android AAR distribution via MavenLocal or MavenCentral.
-* **SDK Dependency Injection / Factory:** Provides high-level SDK factory (`GithubCoreSdk.create()`) to easily initialize network, caching, and use cases on any platform.
+Umbrella SDK facade and framework distribution module for GitHub Core KMP.
 
 ---
 
-## 🏗️ Structure
+## 💡 Core Concept & Architectural Role
+
+* **Public SDK Facade:** Combines `:core-domain`, `:core-network`, `:core-cache`, and `:core-apm` into a cohesive, single-entrypoint SDK.
+* **Single Dependency:** Consumer apps declare one dependency (`"com.github.core:github-core"`) and automatically receive all public domain models, Use Cases, and network services.
+* **Unified Factory:** Provides `GithubCoreSdk.create()` to wire network, caching, and services with sensible production defaults.
+
+---
+
+## 📦 Import & Dependencies
+
+### Gradle
+```kotlin
+dependencies {
+    implementation("com.github.core:github-core")
+}
+```
+
+### Key Kotlin Imports
+```kotlin
+import com.github.core.GithubCoreSdk
+```
+
+---
+
+## 🔑 Key Definitions: `GithubCoreSdk`
+
+| Member | Definition & Role |
+| :--- | :--- |
+| `companion fun create(): GithubCoreSdk` | Factory initializing the SDK instance with default network client and cache. |
+| `val networkClient: GithubNetworkClient` | Access to Ktor HTTP client and `apiService`. |
+| `val cache: GithubCache` | Access to local caching store. |
+
+---
+
+## 🔬 Internal Mechanics & Assembly Graph
 
 ```text
-github-core/
-├── src/
-│   ├── commonMain/kotlin/com/github/core/
-│   │   ├── GithubCoreSdk.kt      # High-level SDK initializer & factory
-│   │   └── di/                   # Common dependency wiring
-│   └── commonTest/               # Full end-to-end SDK smoke tests
-└── build.gradle.kts
+┌─────────────────────────────────────────────────────────┐
+│                      :github-core                       │
+│             (Unified Public SDK Entrypoint)             │
+└────────────┬──────────────┬──────────────┬──────────────┘
+             │ api          │ api          │ api          │ api
+             ▼              ▼              ▼              ▼
+     ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+     │ :core-domain │ │:core-network │ │ :core-cache  │ │  :core-apm   │
+     └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘
+```
+
+Using Gradle `api(...)` declarations in `github-core/build.gradle.kts`, child modules are transitively exported into the consumer application's compilation classpath.
+
+### Multiplatform Distribution Targets
+* **🤖 Android:** Packaged as an Android AAR library via Android Gradle Plugin (`com.android.library`).
+* **🍏 iOS:** Compiled into `GithubCoreKMP.xcframework` / static framework via Kotlin/Native for Swift Package Manager (SPM) or CocoaPods.
+* **📱 Flutter:** Consumed via Platform Channels (`MethodChannel`) or Dart FFI.
+
+---
+
+## 💻 Usage Pattern
+
+### Android (Kotlin)
+```kotlin
+val sdk = GithubCoreSdk.create()
+val searchUseCase = SearchRepositoriesUseCase(sdk.networkClient.apiService)
+```
+
+### iOS (Swift via SPM / Framework)
+```swift
+import GithubCoreKMP
+
+let sdk = GithubCoreSdk.companion.create()
+let searchUseCase = SearchRepositoriesUseCase(repository: sdk.networkClient.apiService)
 ```
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Verification
 
-### 1. Standard Run (uses Gradle cache):
 ```bash
-./gradlew :github-core:allTests
-```
-
-### 2. Force Re-run & Print Live Logs (bypasses cache):
-```bash
+# Run end-to-end SDK smoke tests
 ./gradlew :github-core:allTests --rerun-tasks
 ```
-
-### 3. Target-Specific Test Commands:
-```bash
-# Android Host / JVM SDK tests
-./gradlew :github-core:testAndroidHostTest --rerun-tasks
-
-# iOS Simulator SDK tests
-./gradlew :github-core:iosSimulatorArm64Test --rerun-tasks
-```
-
----
-
-## 📦 How Clients Consume `:github-core`
-
-* **iOS (SwiftUI):** Consumes `GithubCoreKMP` via Swift Package Manager (SPM) or XCFramework.
-* **Android (Jetpack Compose):** Imports `implementation("com.github.core:github-core:x.y.z")` via Gradle.
-* **Flutter:** Bridges calls to `GithubCoreSdk` via platform channel / Dart FFI.

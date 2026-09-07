@@ -7,41 +7,29 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.github.core.GithubCoreSdk
+import com.github.core.domain.usecase.SearchRepositoriesUseCase
+import com.sample.android.search.RepoSearchScreen
 import com.sample.android.ui.theme.Sample_androidTheme
 
 class MainActivity : ComponentActivity() {
+    // Initialize the headless GitHub Core KMP SDK and the search use case
+    private val sdk by lazy { GithubCoreSdk.create() }
+    private val searchUseCase by lazy { SearchRepositoriesUseCase(sdk.networkClient.apiService) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Sample_androidTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    RepoSearchScreen(
+                        searchUseCase = searchUseCase,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Sample_androidTheme {
-        Greeting("Android")
     }
 }
