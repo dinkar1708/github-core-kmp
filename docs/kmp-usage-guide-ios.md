@@ -4,19 +4,20 @@ A concise guide to integrating the headless **`github-core-kmp`** SDK into an iO
 
 ---
 
-## 💡 Core Concept: Headless Boundary for iOS
+## 💡 Core Concept: The Headless Boundary
 
-The shared SDK engine provides the business logic, networking, and caching, while the iOS application retains full control over the user interface and presentation state:
+The shared SDK engine provides business logic, data models, networking, and caching, while the iOS application retains full control over native UI and presentation state:
 
-* **SDK (`github-core-kmp`):** Domain models, validation rules, repository search use case, Ktor Darwin HTTP engine, and caching.
+* **SDK (`github-core-kmp`):** Domain models, validation rules, use cases, Ktor Darwin HTTP engine, cache, and APM telemetry.
 * **iOS App (`sample-iOS`):** Native SwiftUI views, `@StateObject` / `@Published` observable view models, and Swift concurrency (`async`/`await`).
 * **Strict Boundary:** No UI components, ViewModels, or platform presentation state inside the shared KMP engine.
 
 ---
 
-## 🏛️ Framework Type: Static vs. Dynamic (`isStatic = true`)
+## 🏛️ Packaging & Linking Type: Static vs. Dynamic
 
-In [`github-core/build.gradle.kts`](../github-core/build.gradle.kts), the framework is configured as a **Static Framework**:
+### Configuration
+In [`github-core/build.gradle.kts`](../github-core/build.gradle.kts), the framework binary is configured as a **Static Framework**:
 
 ```kotlin
 iosTarget.binaries.framework {
@@ -29,18 +30,18 @@ iosTarget.binaries.framework {
 }
 ```
 
-### Why Static Framework?
-* **Direct Compilation into App Binary:** The framework's object code is statically linked directly into the `sample-iOS` executable.
+### Why Static?
+* **Direct Compilation into App Binary:** The framework's object code is statically linked directly into the `sample-iOS` host executable at link time.
 * **No "Embed Frameworks" Step in Xcode:** Unlike dynamic frameworks, static frameworks **must NOT** be embedded in Xcode's *Embed Frameworks* build phase (or set to "Embed & Sign" in General settings). Linking it via `OTHER_LDFLAGS = -framework GithubCoreKMP` is sufficient.
 * **Zero Missing Dynamic Library Crashes:** Eliminates `dyld: Library not loaded` / `image not found` crashes on launch.
-* **Faster Startup Time:** Avoids dyld image loading and dynamic symbol rebinding overhead at application cold-start.
+* **Faster Startup Time:** Avoids dyld image loading and dynamic symbol rebinding overhead during cold-start.
 
-> [!NOTE]
-> If switched to a **Dynamic Framework** (`isStatic = false`), Xcode would require adding `GithubCoreKMP.framework` to **Frameworks, Libraries, and Embedded Content** with **"Embed & Sign"**. Otherwise, the app compiles but crashes immediately upon launch on devices and simulators.
+### What if Dynamic?
+* If switched to a **Dynamic Framework** (`isStatic = false`), Xcode would require adding `GithubCoreKMP.framework` to **Frameworks, Libraries, and Embedded Content** with **"Embed & Sign"**. Otherwise, the app compiles but crashes immediately upon launch on devices and simulators with a missing image error.
 
 ---
 
-## 📦 Framework Generation & Xcode Setup
+## 📦 Build Setup & Configuration
 
 ### 1. Build the Shared Framework
 Compile the debug framework for the iOS simulator target:
@@ -53,40 +54,40 @@ Output artifact:
 ```
 github-core/build/bin/iosSimulatorArm64/debugFramework/GithubCoreKMP.framework
 ```
-
 *(For physical devices or release builds, use `:github-core:linkReleaseFrameworkIosArm64` or assemble an XCFramework).*
 
-### 2. Xcode Build Settings
-In [`sample-iOS.xcodeproj`](../sample/sample-iOS/sample-iOS.xcodeproj):
+### 2. Framework Search Paths
+In [`sample-iOS.xcodeproj`](../sample/sample-iOS/sample-iOS.xcodeproj), add `FRAMEWORK_SEARCH_PATHS`:
+```text
+$(SRCROOT)/../../github-core/build/bin/iosSimulatorArm64/debugFramework
+```
 
-1. **Framework Search Paths (`FRAMEWORK_SEARCH_PATHS`):**
-   ```text
-   $(SRCROOT)/../../github-core/build/bin/iosSimulatorArm64/debugFramework
-   ```
-2. **Other Linker Flags (`OTHER_LDFLAGS`):**
-   ```text
-   -framework GithubCoreKMP
-   ```
-3. **Excluded Architectures (`EXCLUDED_ARCHS`):**
-   ```text
-   "EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "x86_64"
-   ```
-   *(Ensures Apple Silicon simulators build cleanly without architecture mismatch).*
+### 3. Other Linker Flags
+Add `OTHER_LDFLAGS`:
+```text
+-framework GithubCoreKMP
+```
+
+### 4. Excluded Architectures
+Add `EXCLUDED_ARCHS`:
+```text
+"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "x86_64"
+```
+*(Ensures Apple Silicon simulators build cleanly without architecture mismatch).*
 
 ---
 
-## 🧹 SDK Clean & Rebuilding Behavior (`./gradlew clean`)
+## 🧹 SDK Clean & Rebuilding Lifecycle (`./gradlew clean`)
 
-### Understanding the Difference between Android and iOS:
-* **Android (`sample-android`):** Uses Gradle Composite Builds (`includeBuild("../../")`). If you run `./gradlew clean`, Android Studio / Gradle automatically detects missing binaries and recompiles the KMP engine on the fly during `./gradlew assembleDebug`.
-* **iOS (`sample-iOS`):** Xcode does not directly trigger Gradle tasks by default. It looks for the pre-built framework binary located in `github-core/build/bin/...`.
-  * If you run `./gradlew clean` in the root repository, the `build/` directory is deleted.
-  * Attempting to build in Xcode immediately after a clean will fail with:
-    ```text
-    ld: framework not found GithubCoreKMP
-    ```
+### Clean Behavior
+* Unlike Android (which auto-recompiles via composite builds), Xcode looks for the pre-built framework binary located in `github-core/build/bin/...`.
+* If you run `./gradlew clean` in the root repository, the `build/` directory is deleted.
+* Attempting to build in Xcode immediately after a clean will fail with:
+  ```text
+  ld: framework not found GithubCoreKMP
+  ```
 
-### How to Resolve:
+### How to Rebuild
 1. **Manual Command:** Re-run the Gradle framework task after any clean:
    ```bash
    ./gradlew :github-core:linkDebugFrameworkIosSimulatorArm64
@@ -100,45 +101,29 @@ In [`sample-iOS.xcodeproj`](../sample/sample-iOS/sample-iOS.xcodeproj):
 
 ---
 
-## 🔑 Swift Interoperability & Design Notes
+## 🔑 Key Definitions & Interop Notes
 
-### 1. Constructor Default Arguments
-In Kotlin, default constructor parameters (`QueryValidator = QueryValidator()`) are not exported as default parameters to Objective-C / Swift headers. To prevent Swift callers from needing to supply internal validator classes, [`SearchRepositoriesUseCase`](../core-domain/src/commonMain/kotlin/com/github/core/domain/usecase/SearchRepositoriesUseCase.kt) provides an explicit secondary constructor:
-```kotlin
-constructor(repository: GithubRepository) : this(repository, QueryValidator(), PaginationValidator())
-```
-Swift can now initialize cleanly:
-```swift
-SearchRepositoriesUseCase(repository: sdk.networkClient.apiService)
-```
+### Swift Interoperability Details:
+* **Constructor Default Arguments:** Kotlin default parameters do not map to Swift constructors. [`SearchRepositoriesUseCase`](../core-domain/src/commonMain/kotlin/com/github/core/domain/usecase/SearchRepositoriesUseCase.kt) provides an explicit secondary constructor `constructor(repository: GithubRepository)` for clean Swift initialization.
+* **Async / Await with `@Throws`:** Kotlin Native `suspend` functions require `@Throws(Exception::class)` to translate to throwing Swift `try await` functions, preventing runtime crashes.
+* **Handling Inline `Result<T>`:** `kotlin.Result` is a Kotlin inline value class that gets obscured in Objective-C. Calling `search(query:)` unwraps `getOrThrow()`, passing strongly-typed `SearchResult<Repository>` directly to Swift.
 
-### 2. Async / Await with `@Throws`
-In Kotlin Native, a `suspend` function only translates to a throwing Swift async function (`try await`) if annotated with `@Throws`:
-```kotlin
-@Throws(Exception::class)
-suspend fun search(query: String): SearchResult<Repository> = execute(query).getOrThrow()
-```
-* **Without `@Throws`:** Any unhandled Kotlin coroutine exception will crash the iOS app runtime.
-* **With `@Throws`:** Exceptions convert to catchable Swift `Error`s within standard `do { try await ... } catch { ... }` blocks.
+### Summary Mapping Table:
 
-### 3. Handling Kotlin `Result<T>` Inline Class
-Kotlin's `kotlin.Result` is an inline value class (`value class`). In Objective-C and Swift interop, inline classes get boxed and obscured into generic `Any?`. The dedicated `search(query: String)` method unwraps `getOrThrow()`, passing strongly typed `SearchResult<Repository>` directly to Swift.
-
-### 4. Summary Mapping Table
-
-| Kotlin Symbol | Swift Symbol | Notes |
+| Kotlin / KMP Component | iOS Swift Consumer Symbol | Role |
 | :--- | :--- | :--- |
 | `GithubCoreSdk.create()` | `GithubCoreSdk.companion.create()` | Access via the companion object factory. |
 | `SearchRepositoriesUseCase` | `SearchRepositoriesUseCase(repository:)` | Initialized with `sdk.networkClient.apiService`. |
-| `@Throws suspend fun search()` | `try await searchUseCase.search(query:)` | Suspending throwing method bridges directly to Swift `async/await`. |
-| `Repository.description` | `repo.description_` | Renamed with trailing underscore to avoid collision with `NSObject.description`. |
+| `@Throws suspend fun search()` | `try await searchUseCase.search(query:)` | Suspending throwing method bridging to Swift `async/await`. |
+| `Repository` | `repo.fullName`, `repo.description_` | Renamed with trailing underscore to avoid collision with `NSObject.description`. |
 | `SearchResult.items` | `result.items as? [Repository]` | Cast to native Swift typed array. |
+| `DomainError` | `do { ... } catch { ... }` | Handled via Swift standard error catching. |
 
 ---
 
 ## 💻 Implementation in Client App
 
-The iOS app is organized into dedicated components matching the architecture of the Android sample:
+The iOS sample app is organized into dedicated components matching clean architecture boundaries:
 
 ```text
 sample/sample-iOS/sample-iOS/
@@ -162,7 +147,7 @@ struct ContentView: View {
 }
 ```
 
-### 2. ViewModel with Swift Concurrency
+### 2. State & ViewModel Management
 In [`Search/RepoSearchViewModel.swift`](../sample/sample-iOS/sample-iOS/Search/RepoSearchViewModel.swift):
 
 ```swift
@@ -207,7 +192,7 @@ class RepoSearchViewModel: ObservableObject {
 }
 ```
 
-### 3. SwiftUI Search Screen
+### 3. Screen Container
 In [`Search/RepoSearchScreen.swift`](../sample/sample-iOS/sample-iOS/Search/RepoSearchScreen.swift):
 
 ```swift
@@ -221,7 +206,7 @@ struct RepoSearchScreen: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                // Search bar
+                // Search bar with action button
                 HStack {
                     TextField("Search repositories", text: $viewModel.query)
                         .textFieldStyle(.roundedBorder)
@@ -248,7 +233,7 @@ struct RepoSearchScreen: View {
 }
 ```
 
-### 4. Rendering Domain Data
+### 4. Item Row Component
 In [`Search/RepositoryRow.swift`](../sample/sample-iOS/sample-iOS/Search/RepositoryRow.swift):
 
 ```swift
@@ -285,7 +270,7 @@ do {
 
 ---
 
-## 🧪 Build Commands
+## 🧪 Build & Run Commands
 
 ```bash
 # 1. Build the shared KMP framework for iOS Simulator
@@ -297,4 +282,7 @@ cd sample/sample-iOS && xcodebuild -project sample-iOS.xcodeproj -scheme sample-
 # 3. Install & launch in a booted simulator (optional)
 xcrun simctl install booted <path-to-sample-iOS.app>
 xcrun simctl launch booted com.sample.ios.sample-iOS
+
+# 4. Run all shared KMP tests across all modules
+cd ../.. && ./gradlew check
 ```
