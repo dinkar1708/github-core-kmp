@@ -1,22 +1,27 @@
-# 🎨 3. Share both logic and UI — Compose Multiplatform Guide
+# 3. Share both logic and UI — Compose Multiplatform Guide
 
-> 🔗 **Official JetBrains Documentation:** [Choose what to share: Share both logic and UI](https://kotlinlang.org/multiplatform/#choose-share-what-both-logic-ui)
+> **Official JetBrains Documentation:** [Choose what to share: Share both logic and UI](https://kotlinlang.org/multiplatform/#choose-share-what-both-logic-ui)
 
 A comprehensive guide to building a cross-platform application sharing both business logic and user interface using **Compose Multiplatform (CMP)**, referencing [`sample/sample-share-both-logic-and-ui`](../../sample/sample-share-both-logic-and-ui).
 
 ---
 
-## 💡 Core Concept: The Headless Boundary with Shared UI
+## Core Concept & Purpose
 
 > [!NOTE]
 > This architecture directly implements JetBrains' official Kotlin Multiplatform recommendation: [**"Maximum reuse, faster delivery" (`both-logic-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-both-logic-ui) — using Kotlin with Compose Multiplatform to share up to 100% of your app code (including UI) across Android, iOS, and Desktop from a single unified codebase.
 
+### Why & When to Choose Type 3:
+* **The Goal:** Maximum code reuse and fast time-to-market.
+* **What is Shared in KMP (~95%+):** Both the headless data/business engine (`:github-core`) AND the user interface. A single `@Composable` UI codebase powers Android, iOS (via Skiko rendering on a `ComposeUIViewController`), and Desktop.
+* **Contrast with Type 1 & Type 2:** In Type 1 and Type 2, the iOS UI is written natively in SwiftUI. In Type 3, there is zero SwiftUI to maintain for screens — Kotlin Compose renders directly on iOS.
+
 ### Architectural Boundary:
-* **Headless SDK (`github-core-kmp`):** Remains 100% pure and completely headless. It contains **zero UI dependencies**, zero Compose runtime libraries, and has **zero knowledge** of any child consumer projects.
+* **Headless SDK (`github-core-kmp`):** Remains 100% pure and completely headless. It contains zero UI dependencies, zero Compose runtime libraries, and has zero knowledge of any child consumer projects.
 * **Compose Multiplatform App (`sample/sample-share-both-logic-and-ui`):** A standalone multiplatform consumer application that imports the headless `:github-core` engine for networking, caching, and use cases, and implements a shared `@Composable` UI layer running on:
-  - 🤖 **Android** (Native Jetpack Compose runtime)
-  - 🍏 **iOS** (`ComposeUIViewController` rendering via Skiko canvas)
-  - 🖥️ **Desktop** (JVM Skia windowing)
+  - Android (Native Jetpack Compose runtime)
+  - iOS (`ComposeUIViewController` rendering via Skiko canvas)
+  - Desktop (JVM Skia windowing)
 * **Strict SDK Purity:** The core SDK remains completely decoupled. If a consumer team prefers native SwiftUI, they use Tier 2 (`sample-share-logic-native-ui-ios`); if a team prefers 100% shared UI, they consume the same SDK via Tier 3 (`sample-share-both-logic-and-ui`).
 
 ---
