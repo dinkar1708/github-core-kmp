@@ -20,6 +20,9 @@ Welcome to the technical documentation for **`github-core-kmp`**, an enterprise-
 
 ## 🏛️ Architecture & Component Flow
 
+> [!NOTE]
+> This architecture implements JetBrains' official Kotlin Multiplatform architectural tier: [**"One logic layer, native experience" (`logic-native-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui). The shared engine handles all data models, validations, networking, and caching, while native client frontends maintain complete autonomy over UI and presentation state.
+
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        github-core-kmp Engine                          │

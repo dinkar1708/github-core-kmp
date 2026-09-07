@@ -12,6 +12,9 @@ The shared SDK engine provides business logic, data models, networking, and cach
 * **Android App (`sample-android`):** Jetpack Compose UI, coroutines, and Material 3 presentation state.
 * **Strict Boundary:** No UI components, ViewModels, or platform presentation state inside the shared KMP engine.
 
+> [!NOTE]
+> This architecture directly implements JetBrains' official Kotlin Multiplatform recommendation: [**"One logic layer, native experience" (`logic-native-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui) — writing data handling and business logic once in KMP while keeping the UI fully native for maximum platform fidelity and performance.
+
 ---
 
 ## 🏛️ Packaging & Linking Type: Static vs. Dynamic
