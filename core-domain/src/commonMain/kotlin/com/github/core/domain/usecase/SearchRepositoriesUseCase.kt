@@ -13,6 +13,21 @@ class SearchRepositoriesUseCase(
     private val queryValidator: QueryValidator = QueryValidator(),
     private val paginationValidator: PaginationValidator = PaginationValidator()
 ) {
+    constructor(repository: GithubRepository) : this(repository, QueryValidator(), PaginationValidator())
+
+    /**
+     * Convenience overload for multiplatform consumers (iOS/Swift & Flutter).
+     */
+    suspend fun execute(query: String): Result<SearchResult<Repository>> =
+        execute(query, SortField.STARS, SortOrder.DESC, 1, 30)
+
+    /**
+     * Suspending search method that throws on failure, mapping directly to Swift async/await try/catch.
+     */
+    @Throws(Exception::class)
+    suspend fun search(query: String): SearchResult<Repository> =
+        execute(query).getOrThrow()
+
     /**
      * Executes GitHub repository search with input validation and resilience.
      */

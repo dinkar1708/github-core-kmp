@@ -100,7 +100,8 @@ In accordance with Clean Architecture principles (dependencies point strictly in
 
 ## 🔗 Consumer Client Applications
 
-* 🤖 **Local Android Sample App:** [`sample/sample-android`](./sample/sample-android) — Complete Jetpack Compose sample app. See the [**KMP Usage Guide**](./docs/kmp-usage-guide.md).
+* 🤖 **Local Android Sample App:** [`sample/sample-android`](./sample/sample-android) — Complete Jetpack Compose sample app. See the [**Android KMP Usage Guide**](./docs/kmp-usage-guide-android.md).
+* 🍏 **Local iOS Sample App:** [`sample/sample-iOS`](./sample/sample-iOS) — Complete SwiftUI sample app. See the [**iOS KMP Usage Guide**](./docs/kmp-usage-guide-ios.md).
 * 🤖 **Android Native App (Reference):** [`github-cruise-android`](https://github.com/dinkar1708/github-cruise-android)
 * 🍎 **iOS Native App:** [`github-repo-search-ios`](https://github.com/dinkar1708/github-repo-search-ios)
 * 📱 **Flutter App:** [`flutter_riverpod_template`](https://github.com/dinkar1708/flutter_riverpod_template)
