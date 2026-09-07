@@ -1,21 +1,22 @@
-# 🍏 2. Share logic but keep UI native — iOS Guide
+# 2. Share logic but keep UI native — iOS Guide
 
-> 🔗 **Official JetBrains Documentation:** [Choose what to share: Share logic but keep UI native](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)
+> **Official JetBrains Documentation:** [Choose what to share: Share logic but keep UI native](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)
 
 A concise guide to integrating the headless **`github-core-kmp`** SDK into an iOS application, using [`sample/sample-share-logic-native-ui-ios`](../../sample/sample-share-logic-native-ui-ios) as the reference.
 
 ---
 
-## 💡 Core Concept: The Headless Boundary
-
-The shared SDK engine provides business logic, data models, networking, and caching, while the iOS application retains full control over native UI and presentation state:
-
-* **SDK (`github-core-kmp`):** Domain models, validation rules, use cases, Ktor Darwin HTTP engine, cache, and APM telemetry.
-* **iOS App (`sample-share-logic-native-ui-ios`):** Native SwiftUI views, `@StateObject` / `@Published` observable view models, and Swift concurrency (`async`/`await`).
-* **Strict Boundary:** No UI components, ViewModels, or platform presentation state inside the shared KMP engine.
+## Core Concept & Purpose
 
 > [!NOTE]
 > This architecture directly implements JetBrains' official Kotlin Multiplatform recommendation: [**"One logic layer, native experience" (`logic-native-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui) — writing data handling and business logic once in KMP while keeping the UI fully native for maximum platform fidelity and performance.
+
+### Why & When to Choose Type 2 (Our Core Engine Model):
+* **The Goal:** Maximum platform fidelity with a unified data & business engine.
+* **What is Shared in KMP (~70%):** The entire Headless SDK (`:core-network`, `:core-cache`, `:core-apm`, `:core-domain`). KMP handles all HTTP requests (Ktor Darwin engine), SQLite database caching (SQLDelight), latency telemetry, and Use Cases.
+* **What is NOT Shared in KMP:** 
+  * **UI is 100% Native:** iOS engineers write standard SwiftUI views, `@StateObject` / `@Published` observable view models, and consume suspending functions seamlessly with Swift concurrency (`async`/`await`).
+  * **No UI or ViewModels in Core:** The SDK stops cleanly at the Use Case boundary, respecting Apple's ARC memory management and avoiding ViewModel lifecycle leaks.
 
 ---
 

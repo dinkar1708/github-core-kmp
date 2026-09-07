@@ -1,19 +1,27 @@
-# 🧩 1. Share a piece of logic — KMP Guide
+# 1. Share a piece of logic — KMP Guide
 
-> 🔗 **Official JetBrains Documentation:** [Choose what to share: Share a piece of logic](https://kotlinlang.org/multiplatform/#choose-share-what-piece-of-logic)
+> **Official JetBrains Documentation:** [Choose what to share: Share a piece of logic](https://kotlinlang.org/multiplatform/#choose-share-what-piece-of-logic)
 
 A comprehensive guide to adopting Kotlin Multiplatform by sharing an isolated piece of business logic, using [`sample/sample-share-piece-of-logic`](../../sample/sample-share-piece-of-logic) as the consumer reference.
 
 ---
 
-## 💡 Core Concept: Isolated Business Logic
+## Core Concept & Purpose
 
 > [!NOTE]
 > This architecture directly implements JetBrains' official Kotlin Multiplatform recommendation: [**"Stabilize and sync critical features" (`piece-of-logic`)**](https://kotlinlang.org/multiplatform/#choose-share-what-piece-of-logic) — starting by sharing an isolated, core part of business logic (validation rules, calculations, data models) to improve consistency across platforms without requiring major architectural changes.
 
+### Why & When to Choose Type 1:
+* **The Goal:** Zero-risk incremental adoption. You have existing, mature Android and iOS codebases and do not want to rewrite your networking or database in KMP.
+* **What is Shared in KMP:** Only pure business algorithms and validation rules (in our case, [`:core-domain`](../../core-domain) with `QueryValidator` and `PaginationValidator`).
+* **What is NOT Shared in KMP:** 
+  * **No Networking:** Android continues using its existing Retrofit/OkHttp; iOS continues using native `URLSession`/Alamofire.
+  * **No Database:** Android keeps its Room/SQLite; iOS keeps CoreData/SwiftData.
+  * **No UI:** Android writes Jetpack Compose; iOS writes native SwiftUI.
+
 ### Architectural Boundary:
 * **SDK Module (`:core-domain`):** Pure Kotlin business models, input validation algorithms (`QueryValidator`, `PaginationValidator`), and domain contracts. Zero third-party runtime dependencies (no Ktor, no SQLite, no UI).
-* **Consumer App (`sample/sample-share-piece-of-logic`):** A lightweight client application importing **only** `:core-domain` to perform consistent client-side validation and data handling across platforms.
+* **Consumer App (`sample/sample-share-piece-of-logic`):** A lightweight client application importing **only** `:core-domain` to perform consistent client-side validation across platforms.
 * **Strict SDK Purity:** The core SDK repository (`github-core-kmp`) has **zero knowledge** of the consumer sample. The sample lives independently in `sample/` and links the SDK via Gradle composite builds.
 
 ---

@@ -1,45 +1,31 @@
-# 🎨 Sample: Share Both Logic and UI (Tier 3: Compose Multiplatform)
+This is a Kotlin Multiplatform project targeting Android, iOS.
 
-This sample demonstrates JetBrains' official **"Share both logic and UI"** adoption pattern using **Compose Multiplatform (CMP)**.
+* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
+  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+
+* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
+  It contains several subfolders:
+  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
+  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
+    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
+    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
+    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
+    folder is the appropriate location.
+
+### Running the apps
+
+Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+
+- Android app: `./gradlew :androidApp:assembleDebug`
+- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+
+### Running tests
+
+Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+
+- Android tests: `./gradlew :shared:testAndroidHostTest`
+- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
 
 ---
 
-## 🎯 Purpose
-* Share **both** business logic and user interface from a single codebase across:
-  - 🤖 **Android** (Compose runtime)
-  - 🍏 **iOS** (`ComposeUIViewController` rendering via Skiko)
-  - 🖥️ **Desktop** (JVM Skia windowing)
-* Consumes the headless **`:github-core`** SDK for networking, caching, and repository search use cases.
-
----
-
-## 📖 Documentation
-See the complete implementation guide in [**`docs/samples/3-guide-share-both-logic-and-ui.md`**](../../docs/samples/3-guide-share-both-logic-and-ui.md).
-
----
-
-## 🔗 Setup
-To link the local SDK engine, declare composite build substitution in `settings.gradle.kts`:
-
-```kotlin
-includeBuild("../../") {
-    dependencySubstitution {
-        substitute(module("com.github.core:github-core")).using(project(":github-core"))
-    }
-}
-```
-
-And in `composeApp/build.gradle.kts`:
-
-```kotlin
-dependencies {
-    // Shared headless SDK engine
-    commonMainImplementation("com.github.core:github-core")
-
-    // Compose Multiplatform UI
-    commonMainImplementation(compose.runtime)
-    commonMainImplementation(compose.foundation)
-    commonMainImplementation(compose.material3)
-    commonMainImplementation(compose.ui)
-}
-```
+Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…

@@ -1,21 +1,22 @@
-# 🤖 2. Share logic but keep UI native — Android Guide
+# 2. Share logic but keep UI native — Android Guide
 
-> 🔗 **Official JetBrains Documentation:** [Choose what to share: Share logic but keep UI native](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)
+> **Official JetBrains Documentation:** [Choose what to share: Share logic but keep UI native](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)
 
 A concise guide to integrating the headless **`github-core-kmp`** SDK into an Android application, using [`sample/sample-share-logic-native-ui-android`](../../sample/sample-share-logic-native-ui-android) as the reference.
 
 ---
 
-## 💡 Core Concept: The Headless Boundary
-
-The shared SDK engine provides business logic, data models, networking, and caching, while the Android application retains full control over native UI and presentation state:
-
-* **SDK (`github-core-kmp`):** Domain models, validation rules, use cases, Ktor HTTP client (OkHttp engine), cache, and APM telemetry.
-* **Android App (`sample-share-logic-native-ui-android`):** Jetpack Compose UI, coroutines, and Material 3 presentation state.
-* **Strict Boundary:** No UI components, ViewModels, or platform presentation state inside the shared KMP engine.
+## Core Concept & Purpose
 
 > [!NOTE]
 > This architecture directly implements JetBrains' official Kotlin Multiplatform recommendation: [**"One logic layer, native experience" (`logic-native-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui) — writing data handling and business logic once in KMP while keeping the UI fully native for maximum platform fidelity and performance.
+
+### Why & When to Choose Type 2 (Our Core Engine Model):
+* **The Goal:** Maximum platform fidelity with a unified data & business engine.
+* **What is Shared in KMP (~70%):** The entire Headless SDK (`:core-network`, `:core-cache`, `:core-apm`, `:core-domain`). KMP handles all HTTP requests (Ktor 3.x), SQLite database caching (SQLDelight), latency telemetry, and Use Cases.
+* **What is NOT Shared in KMP:** 
+  * **UI is 100% Native:** Android engineers build screens with Jetpack Compose, Material 3, and AndroidX `ViewModel`.
+  * **No UI or ViewModels in Core:** The SDK stops cleanly at the Use Case boundary, preventing lifecycle leaks or platform coupling.
 
 ---
 
