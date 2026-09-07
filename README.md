@@ -8,13 +8,14 @@ This core engine powers three distinct native client frontends: **Jetpack Compos
 
 ## 🏗️ Architectural Philosophy: The "Headless Boundary"
 
-To maximize adoption across diverse product teams, this KMP engine strictly enforces a **Headless Architecture boundary**. The shared code handles the "Bottom 70%" of the app, stopping exactly at the **Domain / Use Case layer**.
+To maximize adoption across diverse product teams, this KMP engine strictly enforces a **Headless Architecture boundary**, directly implementing JetBrains' official Kotlin Multiplatform recommendation: [**"One logic layer, native experience" (`logic-native-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui). The shared code handles the "Bottom 70%" of the app, stopping exactly at the **Domain / Use Case layer**.
 
 ### Why not share ViewModels?
 Forcing Kotlin `StateFlow` or `ViewModels` onto iOS and Flutter teams often creates lifecycle memory leaks, requires heavy event bridging, and restricts engineers from using native paradigms (like `@Observable` in Swift or Riverpod in Dart). By stopping at the Use Case layer, we ensure:
 
-1. **Zero UI Compromise:** UI teams write 100% native presentation state.
+1. **Zero UI Compromise:** UI teams write 100% native presentation state (Jetpack Compose on Android, SwiftUI on iOS).
 2. **True Enablement:** iOS and Flutter teams aren't forced into Kotlin paradigms; they simply consume cleanly formatted data.
+3. **Platform Fidelity:** Follows the proven architecture adopted by Netflix, Booking.com, Duolingo, and Forbes.
 
 ```text
                       ┌──────────────────────────────────────────────┐
@@ -100,7 +101,8 @@ In accordance with Clean Architecture principles (dependencies point strictly in
 
 ## 🔗 Consumer Client Applications
 
-* 🤖 **Local Android Sample App:** [`sample/sample-android`](./sample/sample-android) — Complete Jetpack Compose sample app. See the [**KMP Usage Guide**](./docs/kmp-usage-guide.md).
+* 🤖 **Local Android Sample App:** [`sample/sample-android`](./sample/sample-android) — Complete Jetpack Compose sample app. See the [**Android KMP Usage Guide**](./docs/kmp-usage-guide-android.md).
+* 🍏 **Local iOS Sample App:** [`sample/sample-iOS`](./sample/sample-iOS) — Complete SwiftUI sample app. See the [**iOS KMP Usage Guide**](./docs/kmp-usage-guide-ios.md).
 * 🤖 **Android Native App (Reference):** [`github-cruise-android`](https://github.com/dinkar1708/github-cruise-android)
 * 🍎 **iOS Native App:** [`github-repo-search-ios`](https://github.com/dinkar1708/github-repo-search-ios)
 * 📱 **Flutter App:** [`flutter_riverpod_template`](https://github.com/dinkar1708/flutter_riverpod_template)
