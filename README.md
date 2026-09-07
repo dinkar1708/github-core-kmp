@@ -99,10 +99,16 @@ In accordance with Clean Architecture principles (dependencies point strictly in
 
 ---
 
-## 🔗 Consumer Client Applications
+## 🔗 Consumer Client Applications (JetBrains Official Paradigms)
 
-* 🤖 **Local Android Sample App:** [`sample/sample-android`](./sample/sample-android) — Complete Jetpack Compose sample app. See the [**Android KMP Usage Guide**](./docs/kmp-usage-guide-android.md).
-* 🍏 **Local iOS Sample App:** [`sample/sample-iOS`](./sample/sample-iOS) — Complete SwiftUI sample app. See the [**iOS KMP Usage Guide**](./docs/kmp-usage-guide-ios.md).
+This core SDK engine powers all three official JetBrains KMP adoption patterns under [`sample/`](./sample):
+
+1. 🧩 [**1. Share a piece of logic**](https://kotlinlang.org/multiplatform/#choose-share-what-piece-of-logic): [`sample/sample-share-piece-of-logic`](./sample/sample-share-piece-of-logic) — Consumes only `:core-domain` for validation. See the [**1. Piece of Logic Guide**](./docs/samples/1-guide-share-piece-of-logic.md).
+2. 🚀 [**2. Share logic but keep UI native**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui):
+   * 🤖 **Android (Compose):** [`sample/sample-share-logic-native-ui-android`](./sample/sample-share-logic-native-ui-android) — See the [**2. Android Guide**](./docs/samples/2-guide-share-logic-native-ui-android.md).
+   * 🍏 **iOS (SwiftUI):** [`sample/sample-share-logic-native-ui-ios`](./sample/sample-share-logic-native-ui-ios) — See the [**2. iOS Guide**](./docs/samples/2-guide-share-logic-native-ui-ios.md).
+3. 🎨 [**3. Share both logic and UI**](https://kotlinlang.org/multiplatform/#choose-share-what-both-logic-ui): [`sample/sample-share-both-logic-and-ui`](./sample/sample-share-both-logic-and-ui) — Compose Multiplatform across platforms. See the [**3. Both Logic & UI Guide**](./docs/samples/3-guide-share-both-logic-and-ui.md).
+
 * 🤖 **Android Native App (Reference):** [`github-cruise-android`](https://github.com/dinkar1708/github-cruise-android)
 * 🍎 **iOS Native App:** [`github-repo-search-ios`](https://github.com/dinkar1708/github-repo-search-ios)
 * 📱 **Flutter App:** [`flutter_riverpod_template`](https://github.com/dinkar1708/flutter_riverpod_template)
