@@ -2,9 +2,11 @@ package com.github.core.network
 
 import com.github.core.domain.error.DomainError
 import com.github.core.network.resilience.RetryPolicy
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class RetryPolicyTest {
@@ -59,5 +61,38 @@ class RetryPolicyTest {
         assertTrue(result.isFailure)
         assertEquals(1, executionCount, "404 Not Found should NOT be retried")
         println("✅ [core-network] 404 Not Found failed fast without wasteful retries")
+    }
+
+    @Test
+    fun testCancellationExceptionRethrownImmediatelyWithoutRetry() = runTest {
+        println("🧪 [core-network] Testing RetryPolicy: coroutine CancellationException propagation...")
+        var executionCount = 0
+        val policy = RetryPolicy(maxRetries = 3, delayFn = {})
+
+        assertFailsWith<CancellationException> {
+            policy.execute<String>("test-cancel") {
+                executionCount++
+                Result.failure(CancellationException("Job was cancelled by UI scope"))
+            }
+        }
+
+        assertEquals(1, executionCount, "CancellationException must NOT be retried")
+        println("✅ [core-network] CancellationException rethrown immediately on attempt 1")
+    }
+
+    @Test
+    fun testRateLimitExceededErrorFailsFastWithoutRetry() = runTest {
+        println("🧪 [core-network] Testing RetryPolicy: RateLimitExceededError fast-fail...")
+        var executionCount = 0
+        val policy = RetryPolicy(maxRetries = 3, delayFn = {})
+
+        val result = policy.execute<String>("test-ratelimit") {
+            executionCount++
+            Result.failure(DomainError.RateLimitExceededError(resetTimeSeconds = 3600L))
+        }
+
+        assertTrue(result.isFailure)
+        assertEquals(1, executionCount, "RateLimitExceededError must NOT be retried")
+        println("✅ [core-network] RateLimitExceededError failed fast without wasteful retries")
     }
 }
