@@ -16,6 +16,11 @@ Welcome to the technical documentation for **`github-core-kmp`**, an enterprise-
 | **`:core-cache` (Local Persistence)** | In-memory and offline caching engine, TTL freshness policies, and cold-start acceleration. | [Detailed README](../core-cache/README.md) | [Overview](./core-cache/README.md) |
 | **`:core-apm` (Telemetry & APM)** | High-precision `TraceTimer`, metric dispatching, and vendor-agnostic APM integration (Firebase, Datadog, MetricKit). | [Detailed README](../core-apm/README.md) | [Overview](./core-apm/README.md) |
 
+### Architecture Standards & Authoritative References
+
+- 📚 [**Architecture, Platform & Technical References (`docs/references.md`)**](./references.md): Comprehensive catalog of official platform standards, JetBrains KMP guidelines, Clean Architecture references, Ktor/Kotlinx docs, enterprise case studies (Netflix, Cash App, Slack), and the Architectural Traceability Matrix.
+- 🤝 [**Contributing Guidelines (`docs/CONTRIBUTING.md`)**](./CONTRIBUTING.md): Branch naming conventions, Conventional Commits specification, multi-environment workflow (`dev` → `stg` → `main`), headless architecture guardrails, and verification checklists.
+
 ### Client Adoption Guides (JetBrains Official Paradigms)
 
 Detailed consumer guides demonstrating how external frontends adopt the SDK are organized in [**`docs/samples/`**](./samples/README.md).

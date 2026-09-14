@@ -113,7 +113,7 @@ This core SDK engine powers all three official JetBrains KMP adoption patterns u
 * **iOS Native App:** [`github-repo-search-ios`](https://github.com/dinkar1708/github-repo-search-ios)
 * **Flutter App:** [`flutter_riverpod_template`](https://github.com/dinkar1708/flutter_riverpod_template)
 
-For comprehensive deep-dive SDK module documentation, visit the [Documentation Portal](./docs/README.md).
+For comprehensive deep-dive SDK module documentation, visit the [Documentation Portal](./docs/README.md) or explore the authoritative [Architecture, Platform & Technical References](./docs/references.md).
 
 ---
 
