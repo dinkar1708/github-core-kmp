@@ -7,6 +7,13 @@ import com.github.core.domain.repository.GithubRepository
 class GetRepositoryDetailUseCase(
     private val repository: GithubRepository
 ) {
+    /**
+     * Suspending fetch method that throws on failure, mapping directly to Swift async/await try/catch.
+     */
+    @Throws(Exception::class)
+    suspend fun get(owner: String, repo: String): Repository =
+        execute(owner, repo).getOrThrow()
+
     suspend fun execute(owner: String, repo: String): Result<Repository> {
         val trimmedOwner = owner.trim()
         val trimmedRepo = repo.trim()
