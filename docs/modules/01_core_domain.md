@@ -1,5 +1,10 @@
 # Module Spec: `:core-domain`
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Introduce Kotlin Multiplatform to Your Project](https://kotlinlang.org/docs/multiplatform-introduce-your-project.html)  
+> • [Kotlin Foundation: kotlinx.serialization Standard](https://github.com/Kotlin/kotlinx.serialization)  
+> • [Uncle Bob: Clean Architecture - Entities & Use Cases](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
 ## 💡 Architectural Role & Concept
 * **Zero Infrastructure Dependencies:** Sits at the innermost center of Clean Architecture. Has no knowledge of HTTP (Ktor), SQLite, or UI frameworks.
 * **Single Source of Truth:** Establishes platform-agnostic business models, input validations, repository contracts, and Use Cases shared across Android, iOS, and Flutter.

@@ -1,5 +1,10 @@
 # 🌟 Reviewer & Architect Onboarding Guide (`00_START_HERE.md`)
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform Architectural Paradigms](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)  
+> • [Uncle Bob Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)  
+> • [Martin Fowler: Headless Component & Service Design](https://martinfowler.com/articles/headless-component.html)
+
 Welcome to the **`github-core-kmp`** codebase. This guide is tailored for **lead mobile architects, engineering managers, and technical reviewers** evaluating this Kotlin Multiplatform (KMP) SDK.
 
 ---

@@ -1,5 +1,11 @@
 # 📱 Heterogeneous Client Integration Blueprints
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform One Logic Layer, Native UI](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)  
+> • [Android Developers: Architecture Guidelines](https://developer.android.com/topic/architecture)  
+> • [Apple Developer: SwiftUI & Concurrency](https://developer.apple.com/documentation/swiftui)  
+> • [Flutter Dev: Platform Integration](https://docs.flutter.dev/platform-integration/platform-channels)
+
 This directory contains integration blueprints demonstrating how external frontends adopt **`github-core-kmp`** while maintaining 100% native UI and presentation paradigms.
 
 ---

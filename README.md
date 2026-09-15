@@ -14,7 +14,7 @@
 [![Tests](https://img.shields.io/badge/Tests-Passing%20(JVM%20%7C%20Android%20%7C%20iOS)-brightgreen)]()
 [![License](https://img.shields.io/badge/License-MIT-purple)](./LICENSE)
 
-[**🌟 Start Here (Reviewer Guide)**](./docs/00_START_HERE.md) • [**📚 Documentation Portal**](./docs/README.md) • [**🏛️ ADRs**](./docs/adr/README.md) • [**📱 Client Integration**](./docs/integration/README.md)
+[**🌟 Start Here (Reviewer Guide)**](./docs/00_START_HERE.md) • [**📚 Documentation Portal**](./docs/README.md) • [**🏛️ ADRs**](./docs/adr/README.md) • [**📱 Client Integration**](./docs/integration/README.md) • [**📖 Technical References**](./docs/references.md)
 
 </div>
 

@@ -1,5 +1,10 @@
 # Module Spec: `:github-core`
 
+> 📖 **Official Standards & References:**  
+> • [Apple Developer: Creating a Multi-Platform XCFramework](https://developer.apple.com/documentation/xcode/creating-a-multi-platform-xcframework)  
+> • [Android Developers: Create an Android Library (AAR)](https://developer.android.com/studio/projects/android-library)  
+> • [JetBrains: Multiplatform Gradle Plugin - Transitive Dependencies & API Export](https://kotlinlang.org/docs/multiplatform-add-dependencies.html#api-dependencies)
+
 ## 💡 Architectural Role & Concept
 * **Public SDK Facade:** Combines `:core-domain`, `:core-network`, `:core-cache`, and `:core-apm` into a cohesive, single-entrypoint SDK.
 * **Single Dependency:** Consumer apps declare one dependency (`"com.github.core:github-core"`) and automatically receive all public domain models, Use Cases, and network services.

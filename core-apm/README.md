@@ -1,5 +1,10 @@
 # 📊 `:core-apm`
 
+> 📖 **Official Standards & References:**  
+> • [Kotlin Standard Library: TimeSource.Monotonic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-time-source/-monotonic/)  
+> • [OpenTelemetry: Distributed Tracing & Span Specification](https://opentelemetry.io/docs/specs/otel/trace/api/#span)  
+> • [W3C: High Resolution Time Level 2 Recommendation](https://www.w3.org/TR/hr-time-2/)
+
 Application Performance Monitoring (APM) and execution telemetry engine.
 
 ---

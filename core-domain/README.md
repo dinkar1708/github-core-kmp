@@ -1,5 +1,10 @@
 # 📦 `:core-domain`
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform Pure Logic Sharing](https://kotlinlang.org/multiplatform/#choose-share-what-piece-of-logic)  
+> • [Uncle Bob: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)  
+> • [Kotlin Foundation: kotlinx.serialization](https://github.com/Kotlin/kotlinx.serialization)
+
 The pure domain and business logic core of the GitHub Core KMP SDK engine.
 
 ---

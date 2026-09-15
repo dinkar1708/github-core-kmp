@@ -1,5 +1,11 @@
 # 📱 Client Applications & Integration Guide (`TASK.md`)
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform Architectural Paradigms](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)  
+> • [Android Developers: Guide to App Architecture](https://developer.android.com/topic/architecture)  
+> • [Apple Swift: Swift Concurrency](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)  
+> • [Flutter Dev: Writing Custom Platform-Specific Code](https://docs.flutter.dev/platform-integration/platform-channels)
+
 This document outlines how the **three heterogeneous client applications** consume and integrate with **`github-core-kmp`** as their single source of truth for business logic, networking, caching, and APM telemetry.
 
 ---

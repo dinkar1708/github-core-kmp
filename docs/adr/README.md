@@ -1,5 +1,9 @@
 # 🏛️ Architecture Decision Records (ADRs)
 
+> 📖 **Official Standards & References:**  
+> • [Michael Nygard: Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)  
+> • [Joel Parker Henderson: Architecture Decision Record Pattern](https://github.com/joelparkerhenderson/architecture-decision-record)
+
 This directory documents the significant architectural and technical decisions made during the design, implementation, and evolution of **`github-core-kmp`**.
 
 The format follows [Michael Nygard's Architecture Decision Record (ADR) standard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions).

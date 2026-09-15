@@ -1,5 +1,10 @@
 # Contributing Guidelines
 
+> 📖 **Official Standards & References:**  
+> • [Conventional Commits v1.0.0 Specification](https://www.conventionalcommits.org/en/v1.0.0/)  
+> • [Vincent Driessen: A Successful Git Branching Model](https://nvie.com/posts/a-successful-git-branching-model/)  
+> • [GitHub Docs: About Pull Requests & Protected Branches](https://docs.github.com/en/pull-requests)
+
 **Project**: `github-core-kmp` (Headless Multiplatform Engine)  
 **Author**: Dinakar Prasad Maurya  
 

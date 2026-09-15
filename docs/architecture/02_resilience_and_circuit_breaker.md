@@ -1,5 +1,11 @@
 # 02. Resilience & Circuit Breaker State Machine
 
+> 📖 **Official Standards & References:**  
+> • [Martin Fowler: Circuit Breaker Pattern](https://martinfowler.com/bliki/CircuitBreaker.html)  
+> • [GitHub REST API: Rate Limits & Header Specifications](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)  
+> • [IETF RFC 6585: Additional HTTP Status Codes (HTTP 429 & 503)](https://datatracker.ietf.org/doc/html/rfc6585)  
+> • [AWS Architecture: Exponential Backoff And Jitter](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
+
 ## 🎯 Overview
 
 Network calls to public REST APIs are inherently prone to transient failures, degraded backend responses, and strict rate-limiting.

@@ -1,5 +1,9 @@
 # ADR 001: Headless Boundary vs. Shared ViewModels
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform One Logic Layer, Native Experience](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)  
+> • [Martin Fowler: Presentation Domain Data Layering](https://martinfowler.com/bliki/PresentationDomainDataLayering.html)
+
 ## 📌 Status
 `Accepted` (2026-09)
 

@@ -1,5 +1,9 @@
 # ⏱️ Telemetry & Performance Benchmarks
 
+> 📖 **Official Standards & References:**  
+> • [Android Developers: Core App Quality Guidelines](https://developer.android.com/docs/quality-guidelines/core-app-quality)  
+> • [Apple Developer: Improving Your App's Performance](https://developer.apple.com/documentation/xcode/improving-your-app-s-performance)
+
 This directory contains empirical performance measurements, latency comparisons, and binary size footprint analyses for **`github-core-kmp`**.
 
 ---

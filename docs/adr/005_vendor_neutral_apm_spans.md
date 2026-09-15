@@ -1,5 +1,9 @@
 # ADR 005: Monotonic TraceTimer vs. Third-Party APM SDKs
 
+> 📖 **Official Standards & References:**  
+> • [Kotlin Standard Library: TimeSource.Monotonic](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-time-source/-monotonic/)  
+> • [OpenTelemetry: Distributed Tracing & Span Specification](https://opentelemetry.io/docs/specs/otel/trace/api/)
+
 ## 📌 Status
 `Accepted` (2026-09)
 

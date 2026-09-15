@@ -1,5 +1,10 @@
 # 🏗️ Architecture Deep-Dive Portal
 
+> 📖 **Official Standards & References:**  
+> • [Uncle Bob Martin: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)  
+> • [JetBrains: Kotlin Multiplatform Architecture Guidelines](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)  
+> • [Martin Fowler: Software Architecture Guide](https://martinfowler.com/architecture/)
+
 This section provides technical documentation for the internal design, concurrency patterns, and resilience mechanisms of **`github-core-kmp`**.
 
 ---

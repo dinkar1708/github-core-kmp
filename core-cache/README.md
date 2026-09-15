@@ -1,5 +1,10 @@
 # 💾 `:core-cache`
 
+> 📖 **Official Standards & References:**  
+> • [Kotlinx Coroutines: Shared Mutable State & Mutex](https://kotlinlang.org/docs/shared-mutable-state-and-coroutines.html#mutual-exclusion)  
+> • [Microsoft Architecture: Cache-Aside Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside)  
+> • [IETF RFC 7234: HTTP Caching Standards](https://datatracker.ietf.org/doc/html/rfc7234)
+
 Offline-first caching and local persistence engine for the GitHub Core KMP SDK.
 
 ---

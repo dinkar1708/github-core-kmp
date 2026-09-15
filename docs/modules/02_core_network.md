@@ -1,5 +1,11 @@
 # Module Spec: `:core-network`
 
+> 📖 **Official Standards & References:**  
+> • [Ktor: Creating Multiplatform HTTP Client](https://ktor.io/docs/client-create-multiplatform-application.html)  
+> • [Apple Developer: NSURLSession & App Transport Security (ATS)](https://developer.apple.com/documentation/foundation/urlsession)  
+> • [Square: OkHttp Architecture & Connection Pooling](https://square.github.io/okhttp/)  
+> • [GitHub REST API: Rate Limits & Header Specifications](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)
+
 ## 💡 Architectural Role & Concept
 * **Native Platform Engines:** Leverages native HTTP engines per platform (`OkHttp` on Android/JVM for connection pooling, `Darwin` via Apple `NSURLSession` on iOS).
 * **Enterprise Resilience Triad:** Wraps every network call in **Rate Limit Tracking**, a **Circuit Breaker**, and an **Exponential Backoff Retry Policy**.

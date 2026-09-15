@@ -1,5 +1,11 @@
 # 02. Apple iOS SwiftUI Integration Guide
 
+> 📖 **Official Standards & References:**  
+> • [Apple Developer: SwiftUI Documentation](https://developer.apple.com/documentation/swiftui)  
+> • [Apple Developer: Managing Model Data in Your App with Observation (`@Observable`)](https://developer.apple.com/documentation/observation)  
+> • [Apple Swift: Swift Concurrency & async/await](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)  
+> • [Apple Developer: Swift Package Manager (SPM)](https://developer.apple.com/documentation/xcode/swift-packages)
+
 ## 🎯 Overview
 This guide demonstrates how a native Apple iOS application consumes **`github-core-kmp`** using **SwiftUI**, **Swift Concurrency (`async/await`)**, and **Swift 5.9+ `@Observable`**.
 

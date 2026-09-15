@@ -1,5 +1,10 @@
 # ADR 003: In-Engine Circuit Breaker & RateLimitTracker
 
+> 📖 **Official Standards & References:**  
+> • [Martin Fowler: Circuit Breaker Pattern](https://martinfowler.com/bliki/CircuitBreaker.html)  
+> • [Michael Nygard: Release It! Design and Deploy Production-Ready Software](https://pragprog.com/titles/mnee2/release-it-second-edition/)  
+> • [GitHub REST API: Rate Limits](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)
+
 ## 📌 Status
 `Accepted` (2026-09)
 

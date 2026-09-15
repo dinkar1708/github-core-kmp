@@ -1,5 +1,10 @@
 # 01. Clean Architecture & Module Boundary
 
+> 📖 **Official Standards & References:**  
+> • [Uncle Bob: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)  
+> • [JetBrains: One Logic Layer, Native Experience (logic-native-ui)](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui)  
+> • [Martin Fowler: Inversion of Control Containers and the Dependency Injection pattern](https://martinfowler.com/articles/injection.html)
+
 ## 🏛️ Foundational Design Principles
 
 The architecture of **`github-core-kmp`** is built on **Uncle Bob's Clean Architecture** and the **Dependency Inversion Principle (DIP)**:

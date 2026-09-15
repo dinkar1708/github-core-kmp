@@ -1,5 +1,9 @@
 # 📦 SDK Modules Catalog & Component Responsibilities
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform Project Structure](https://kotlinlang.org/docs/multiplatform-discover-project.html)  
+> • [Uncle Bob: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+
 This directory contains in-depth documentation for all five Kotlin Multiplatform (KMP) modules composing the **`github-core-kmp`** headless SDK engine.
 
 ---

@@ -1,5 +1,10 @@
 # 03. Concurrency & Memory Safety
 
+> 📖 **Official Standards & References:**  
+> • [Kotlin Coroutines: Structured Concurrency Guide](https://kotlinlang.org/docs/coroutines-basics.html#structured-concurrency)  
+> • [Apple Swift: Automatic Reference Counting (ARC)](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/automaticreferencecounting/)  
+> • [JetBrains: Kotlin/Native Memory Management & Concurrency](https://kotlinlang.org/docs/native-memory-manager.html)
+
 ## 🎯 Overview
 
 Kotlin Multiplatform (KMP) code runs in two distinctly different memory and threading environments:

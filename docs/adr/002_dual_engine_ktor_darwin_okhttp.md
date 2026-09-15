@@ -1,5 +1,10 @@
 # ADR 002: Dual Platform Ktor Engines (`Darwin` & `OkHttp`)
 
+> 📖 **Official Standards & References:**  
+> • [Ktor: Supported HTTP Engines](https://ktor.io/docs/client-engines.html)  
+> • [Apple Developer: About App Transport Security (ATS)](https://developer.apple.com/documentation/security/preventing-insecure-network-connections)  
+> • [Square: OkHttp Features & Interceptors](https://square.github.io/okhttp/features/interceptors/)
+
 ## 📌 Status
 `Accepted` (2026-09)
 

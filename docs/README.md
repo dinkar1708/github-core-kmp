@@ -1,5 +1,10 @@
 # 📚 GitHub Core KMP Documentation Portal
 
+> 📖 **Official Standards & References:**  
+> • [JetBrains: Kotlin Multiplatform Official Documentation](https://kotlinlang.org/docs/multiplatform.html)  
+> • [Uncle Bob: The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)  
+> • [Master Technical References Catalog (`docs/references.md`)](./references.md)
+
 Welcome to the technical documentation portal for **`github-core-kmp`**, an enterprise-grade Headless Kotlin Multiplatform (KMP) SDK engine.
 
 ---

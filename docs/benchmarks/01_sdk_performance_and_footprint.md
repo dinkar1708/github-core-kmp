@@ -1,5 +1,10 @@
 # 01. SDK Performance & Footprint Analysis
 
+> 📖 **Official Standards & References:**  
+> • [Android Developers: App Performance & Startup Time](https://developer.android.com/topic/performance/vitals/launch-time)  
+> • [Apple Developer: Reducing Your App's Launch Time](https://developer.apple.com/documentation/xcode/reducing-your-app-s-launch-time)  
+> • [Android Developers: Reduce Your App Size (R8 & ProGuard)](https://developer.android.com/topic/performance/reduce-app-size)
+
 ## 🎯 Executive Summary
 
 **`github-core-kmp`** is designed to deliver sub-millisecond local responses, zero main-thread jank, and minimal binary overhead when embedded into consumer mobile applications.

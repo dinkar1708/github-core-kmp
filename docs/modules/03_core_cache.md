@@ -1,5 +1,10 @@
 # Module Spec: `:core-cache`
 
+> 📖 **Official Standards & References:**  
+> • [Kotlinx Coroutines: Shared Mutable State & Mutex](https://kotlinlang.org/docs/shared-mutable-state-and-coroutines.html#mutual-exclusion)  
+> • [Microsoft Cloud Design Patterns: Cache-Aside Pattern](https://learn.microsoft.com/en-us/azure/architecture/patterns/cache-aside)  
+> • [IETF RFC 7234: Hypertext Transfer Protocol (HTTP/1.1): Caching](https://datatracker.ietf.org/doc/html/rfc7234)
+
 ## 💡 Architectural Role & Concept
 * **Cold-Start Acceleration:** Delivers instant UI rendering (sub-1ms initial latency) from local memory while fresh network data syncs in the background.
 * **Offline Usability:** Preserves search queries and repository listings across active user sessions.

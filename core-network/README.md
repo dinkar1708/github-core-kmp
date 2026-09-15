@@ -1,5 +1,11 @@
 # 🌐 `:core-network`
 
+> 📖 **Official Standards & References:**  
+> • [Ktor Client: Creating a Multiplatform Application](https://ktor.io/docs/client-create-multiplatform-application.html)  
+> • [Apple Developer: NSURLSession & App Transport Security](https://developer.apple.com/documentation/foundation/urlsession)  
+> • [Square: OkHttp](https://square.github.io/okhttp/)  
+> • [Martin Fowler: Circuit Breaker](https://martinfowler.com/bliki/CircuitBreaker.html)
+
 Resilient multiplatform HTTP networking layer powered by Ktor Client 3.x.
 
 ---

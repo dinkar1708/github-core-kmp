@@ -1,5 +1,10 @@
 # Module Spec: `:core-apm`
 
+> 📖 **Official Standards & References:**  
+> • [Kotlin Standard Library: TimeSource.Monotonic API](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-time-source/-monotonic/)  
+> • [OpenTelemetry: Trace & Span Specification](https://opentelemetry.io/docs/specs/otel/trace/api/#span)  
+> • [W3C: High Resolution Time Level 2 Recommendation](https://www.w3.org/TR/hr-time-2/)
+
 ## 💡 Architectural Role & Concept
 * **Execution Latency Observability:** Accurately measures operation durations for network queries, cache lookups, and Use Case processing.
 * **Vendor-Agnostic Design:** Does not package proprietary vendor SDKs (Firebase/Datadog) into the shared KMP binary, preventing binary bloat and version conflicts.

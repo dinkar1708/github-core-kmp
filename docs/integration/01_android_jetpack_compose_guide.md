@@ -1,5 +1,11 @@
 # 01. Android Jetpack Compose Integration Guide
 
+> 📖 **Official Standards & References:**  
+> • [Android Developers: Guide to App Architecture](https://developer.android.com/topic/architecture)  
+> • [Android Developers: Jetpack Compose Documentation](https://developer.android.com/develop/ui/compose)  
+> • [Google: Dependency Injection with Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android)  
+> • [JetBrains: Kotlin StateFlow in Android](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow)
+
 ## 🎯 Overview
 This guide demonstrates how an Android application consumes **`github-core-kmp`** using **Jetpack Compose**, **AndroidX ViewModel**, and **Dagger Hilt**.
 

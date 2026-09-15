@@ -1,5 +1,10 @@
 # 03. Flutter Riverpod Integration Guide
 
+> 📖 **Official Standards & References:**  
+> • [Flutter Documentation: Writing Custom Platform-Specific Code (MethodChannel)](https://docs.flutter.dev/platform-integration/platform-channels)  
+> • [Riverpod: AsyncNotifier & Modern State Management](https://riverpod.dev/docs/providers/async_notifier_provider)  
+> • [Dart Language: Concurrency & Isolates](https://dart.dev/language/concurrency)
+
 ## 🎯 Overview
 This guide demonstrates how a cross-platform **Flutter** application consumes **`github-core-kmp`** using a platform bridge and **Riverpod `AsyncNotifier`**.
 

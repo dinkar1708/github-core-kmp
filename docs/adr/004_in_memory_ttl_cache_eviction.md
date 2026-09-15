@@ -1,5 +1,9 @@
 # ADR 004: Thread-Safe In-Memory TTL & LRU Caching
 
+> 📖 **Official Standards & References:**  
+> • [Kotlinx Coroutines: Mutex Synchronization](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.sync/-mutex/)  
+> • [IETF RFC 7234: HTTP Caching Standards](https://datatracker.ietf.org/doc/html/rfc7234)
+
 ## 📌 Status
 `Accepted` (2026-09)
 
