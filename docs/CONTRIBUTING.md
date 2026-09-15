@@ -1,5 +1,10 @@
 # Contributing Guidelines
 
+> 📖 **Official Standards & References:**  
+> • [Conventional Commits v1.0.0 Specification](https://www.conventionalcommits.org/en/v1.0.0/)  
+> • [Vincent Driessen: A Successful Git Branching Model](https://nvie.com/posts/a-successful-git-branching-model/)  
+> • [GitHub Docs: About Pull Requests & Protected Branches](https://docs.github.com/en/pull-requests)
+
 **Project**: `github-core-kmp` (Headless Multiplatform Engine)  
 **Author**: Dinakar Prasad Maurya  
 
@@ -113,15 +118,21 @@ Using scopes is highly recommended to pinpoint which architectural module or sub
 
 To support enterprise-grade stability, `github-core-kmp` adopts a **Multi-Environment Promotion Model**:
 
-```text
-Topic Branches
-(feature/*, fix/*, refactor/*, test/*, docs/*)
-      │
-      └─── (PR) ───► dev (Development Integration)
-                      │
-                      └─── (Release PR) ───► stg (Staging / Cross-Platform QA)
-                                              │
-                                              └─── (Production PR) ───► main (Production Releases & Tags)
+```mermaid
+flowchart TD
+    TOPIC["Topic Branches<br/>(feature/*, fix/*, refactor/*, test/*, docs/*)"]
+    DEV["dev<br/>(Development Integration)"]
+    STG["stg<br/>(Staging / Cross-Platform QA)"]
+    MAIN["main<br/>(Production Releases & Milestone Tags)"]
+
+    TOPIC -->|"Pull Request (CI Automated Verification)"| DEV
+    DEV -->|"Promotion PR (Cross-Platform Client Testing)"| STG
+    STG -->|"Production PR (Milestone Release Tag v1.x)"| MAIN
+
+    style TOPIC fill:#f8f9fa,stroke:#495057,stroke-width:1px,color:#000
+    style DEV fill:#e7f5ff,stroke:#1c7ed6,stroke-width:2px,color:#000
+    style STG fill:#fff3bf,stroke:#f08c00,stroke-width:2px,color:#000
+    style MAIN fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
 ```
 
 ### Branch Hierarchy

@@ -18,14 +18,22 @@ This directory contains consumer-facing integration guides demonstrating how cli
 
 To understand which paradigm fits your needs, visualize an application in 3 architectural layers:
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│ Layer 1: UI / Presentation (Compose, SwiftUI, Views)     │
-├──────────────────────────────────────────────────────────┤
-│ Layer 2: Network & Cache (Ktor, SQLite, Offline Engine)  │
-├──────────────────────────────────────────────────────────┤
-│ Layer 3: Pure Business Rules (Validators, Models, Math)  │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph APP["Application Architecture Layers"]
+        direction TB
+        L1["📱 Layer 1: UI & Presentation<br/>(Jetpack Compose • SwiftUI • Material Widgets)"]
+        L2["🌐 Layer 2: Network, Cache & Resilience<br/>(Ktor 3.x Client • Mutex Store • Circuit Breaker)"]
+        L3["⚖️ Layer 3: Pure Business Rules<br/>(Validators • Domain Models • Use Case Interactors)"]
+
+        L1 --> L2
+        L2 --> L3
+    end
+
+    style APP fill:#f8f9fa,stroke:#495057,stroke-width:2px,color:#000
+    style L1 fill:#e7f5ff,stroke:#1c7ed6,stroke-width:2px,color:#000
+    style L2 fill:#fff3bf,stroke:#f08c00,stroke-width:2px,color:#000
+    style L3 fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
 ```
 
 | Paradigm | Layer 1: UI | Layer 2: Network & Cache | Layer 3: Pure Logic | Shared % |

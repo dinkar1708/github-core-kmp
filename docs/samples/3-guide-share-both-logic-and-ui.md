@@ -24,6 +24,46 @@ A comprehensive guide to building a cross-platform application sharing both busi
   - Desktop (JVM Skia windowing)
 * **Strict SDK Purity:** The core SDK remains completely decoupled. If a consumer team prefers native SwiftUI, they use Tier 2 (`sample-share-logic-native-ui-ios`); if a team prefers 100% shared UI, they consume the same SDK via Tier 3 (`sample-share-both-logic-and-ui`).
 
+```mermaid
+flowchart TD
+    subgraph SHARED_UI["🎨 Shared Compose Multiplatform UI (~95%+ Code Reuse)"]
+        CMP["@Composable SearchScreen<br/>(Compose Multiplatform Material 3)"]
+        VM["Shared Multiplatform ViewModel<br/>(StateFlow & Coroutines)"]
+        CMP <--> VM
+    end
+
+    subgraph HEADLESS_SDK["⚡ Headless KMP SDK Engine (:github-core)"]
+        UC["SearchRepositoriesUseCase"]
+        NET[":core-network (Ktor Engine)"]
+        CACHE[":core-cache (Mutex Store)"]
+
+        UC --> NET
+        UC --> CACHE
+    end
+
+    subgraph PLATFORMS["📱 Native Platform Host Shells"]
+        direction LR
+        AND_SHELL["🤖 Android App<br/>(ComponentActivity)"]
+        IOS_SHELL["🍏 iOS App<br/>(ComposeUIViewController)"]
+        DESK_SHELL["🖥️ Desktop App<br/>(JVM Window)"]
+    end
+
+    VM --> UC
+    AND_SHELL --> CMP
+    IOS_SHELL --> CMP
+    DESK_SHELL --> CMP
+
+    style SHARED_UI fill:#e7f5ff,stroke:#1c7ed6,stroke-width:2px,color:#000
+    style CMP fill:#fff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style VM fill:#fff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style HEADLESS_SDK fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style UC fill:#fff,stroke:#2b8a3e,stroke-width:1px,color:#000
+    style PLATFORMS fill:#f8f9fa,stroke:#495057,stroke-width:1px,color:#000
+    style AND_SHELL fill:#d3f9d8,stroke:#2b8a3e,stroke-width:1px,color:#000
+    style IOS_SHELL fill:#fff3bf,stroke:#f08c00,stroke-width:1px,color:#000
+    style DESK_SHELL fill:#f3d9fa,stroke:#ae3ec9,stroke-width:1px,color:#000
+```
+
 ---
 
 ## 🏛️ Packaging & Linking Type: Static vs. Dynamic
