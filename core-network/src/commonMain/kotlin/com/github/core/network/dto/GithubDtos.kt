@@ -80,5 +80,7 @@ data class UserDto(
     @SerialName("location")
     val location: String? = null,
     @SerialName("company")
-    val company: String? = null
+    val company: String? = null,
+    @SerialName("blog")
+    val blog: String? = null
 )

@@ -1,35 +1,14 @@
-# 🚀 `:github-core`
+# Module Spec: `:github-core`
 
 > 📖 **Official Standards & References:**  
 > • [Apple Developer: Creating a Multi-Platform XCFramework](https://developer.apple.com/documentation/xcode/creating-a-multi-platform-xcframework)  
 > • [Android Developers: Create an Android Library (AAR)](https://developer.android.com/studio/projects/android-library)  
 > • [JetBrains: Multiplatform Gradle Plugin - Transitive Dependencies & API Export](https://kotlinlang.org/docs/multiplatform-add-dependencies.html#api-dependencies)
 
-Umbrella SDK facade and framework distribution module for GitHub Core KMP.
-
----
-
-## 💡 Core Concept & Architectural Role
-
+## 💡 Architectural Role & Concept
 * **Public SDK Facade:** Combines `:core-domain`, `:core-network`, `:core-cache`, and `:core-apm` into a cohesive, single-entrypoint SDK.
 * **Single Dependency:** Consumer apps declare one dependency (`"com.github.core:github-core"`) and automatically receive all public domain models, Use Cases, and network services.
 * **Unified Factory:** Provides `GithubCoreSdk.create()` to wire network, caching, and services with sensible production defaults.
-
----
-
-## 📦 Import & Dependencies
-
-### Gradle
-```kotlin
-dependencies {
-    implementation("com.github.core:github-core")
-}
-```
-
-### Key Kotlin Imports
-```kotlin
-import com.github.core.GithubCoreSdk
-```
 
 ---
 
@@ -43,7 +22,7 @@ import com.github.core.GithubCoreSdk
 
 ---
 
-## 🔬 Internal Mechanics & Assembly Graph
+## 🔬 Transitive Assembly Graph
 
 ```mermaid
 flowchart TD
@@ -70,7 +49,7 @@ Using Gradle `api(...)` declarations in `github-core/build.gradle.kts`, child mo
 
 ---
 
-## 💻 Usage Pattern
+## 💻 Usage Patterns
 
 ### Android (Kotlin)
 ```kotlin
@@ -89,7 +68,6 @@ let searchUseCase = SearchRepositoriesUseCase(repository: sdk.networkClient.apiS
 ---
 
 ## 🧪 Verification
-
 ```bash
 # Run end-to-end SDK smoke tests
 ./gradlew :github-core:allTests --rerun-tasks

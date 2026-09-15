@@ -18,6 +18,34 @@ A concise guide to integrating the headless **`github-core-kmp`** SDK into an An
   * **UI is 100% Native:** Android engineers build screens with Jetpack Compose, Material 3, and AndroidX `ViewModel`.
   * **No UI or ViewModels in Core:** The SDK stops cleanly at the Use Case boundary, preventing lifecycle leaks or platform coupling.
 
+```mermaid
+flowchart TD
+    subgraph ANDROID_APP["🤖 Android Native Application"]
+        COMPOSE["Jetpack Compose UI<br/>(RepoSearchScreen • LazyColumn)"]
+        VM["AndroidX ViewModel<br/>(viewModelScope • MutableStateFlow)"]
+        COMPOSE <-->|Observes StateFlow / Dispatches Intent| VM
+    end
+
+    subgraph HEADLESS_SDK["⚡ Headless KMP SDK Engine (:github-core)"]
+        UC["SearchRepositoriesUseCase<br/>(execute: suspending Result)"]
+        NET[":core-network<br/>Ktor OkHttp Engine • CircuitBreaker"]
+        CACHE[":core-cache<br/>Mutex In-Memory Store"]
+        
+        UC --> NET
+        UC --> CACHE
+    end
+
+    VM -->|"Calls Suspend Use Case"| UC
+
+    style ANDROID_APP fill:#e7f5ff,stroke:#1c7ed6,stroke-width:2px,color:#000
+    style COMPOSE fill:#fff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style VM fill:#fff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style HEADLESS_SDK fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style UC fill:#fff,stroke:#2b8a3e,stroke-width:1px,color:#000
+    style NET fill:#fff3bf,stroke:#f08c00,stroke-width:1px,color:#000
+    style CACHE fill:#fff3bf,stroke:#f08c00,stroke-width:1px,color:#000
+```
+
 ---
 
 ## 🏛️ Packaging & Linking Type: Static vs. Dynamic

@@ -50,5 +50,6 @@ fun UserDto.toDomain(): User = User(
     following = following,
     htmlUrl = htmlUrl,
     location = location,
-    company = company
+    company = company,
+    blog = blog
 )
