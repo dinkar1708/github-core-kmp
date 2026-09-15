@@ -65,11 +65,20 @@ Single-responsibility business operations:
 
 ## 🔬 Internal Mechanics & Validation Pipeline
 
-```text
-Raw Query & Page ──► [ QueryValidator ] ──► [ PaginationValidator ] ──► Validated Inputs ──► GithubRepository
-                             │                         │
-                             ▼ (On Failure)            ▼ (On Failure)
-                      DomainError.ValidationError (Fast-Fail)
+```mermaid
+flowchart LR
+    INPUT["Raw Query & Page"] --> QV["QueryValidator<br/>(Trim & Non-blank)"]
+    QV -->|Valid| PV["PaginationValidator<br/>(page >= 1, perPage 1..100)"]
+    PV -->|Valid| REPO["GithubRepository<br/>(Contract Execution)"]
+
+    QV -->|Blank / >100 chars| ERR["DomainError.ValidationError<br/>(Immediate Fast-Fail)"]
+    PV -->|Invalid Page| ERR
+
+    style INPUT fill:#f8f9fa,stroke:#495057,stroke-width:1px,color:#000
+    style QV fill:#e7f5ff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style PV fill:#e7f5ff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style REPO fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style ERR fill:#ffe3e3,stroke:#e03131,stroke-width:1px,color:#000
 ```
 
 ### Unified Error Taxonomy (`com.github.core.domain.error.DomainError`)

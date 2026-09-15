@@ -18,6 +18,34 @@ A concise guide to integrating the headless **`github-core-kmp`** SDK into an iO
   * **UI is 100% Native:** iOS engineers write standard SwiftUI views, `@StateObject` / `@Published` observable view models, and consume suspending functions seamlessly with Swift concurrency (`async`/`await`).
   * **No UI or ViewModels in Core:** The SDK stops cleanly at the Use Case boundary, respecting Apple's ARC memory management and avoiding ViewModel lifecycle leaks.
 
+```mermaid
+flowchart TD
+    subgraph IOS_APP["🍏 iOS Native Application"]
+        SWIFT_UI["SwiftUI Presentation<br/>(RepoSearchScreen • List)"]
+        SWIFT_VM["Native Swift ViewModel<br/>(@MainActor • @Observable)"]
+        SWIFT_UI <-->|Binds State / Triggers Actions| SWIFT_VM
+    end
+
+    subgraph HEADLESS_SDK["⚡ Headless KMP SDK Engine (GithubCoreKMP.framework)"]
+        UC["SearchRepositoriesUseCase<br/>(search: @Throws async try await)"]
+        NET[":core-network<br/>Ktor Darwin Engine • NSURLSession"]
+        CACHE[":core-cache<br/>Mutex In-Memory Store"]
+        
+        UC --> NET
+        UC --> CACHE
+    end
+
+    SWIFT_VM -->|"try await search(query:)"| UC
+
+    style IOS_APP fill:#fff3bf,stroke:#f08c00,stroke-width:2px,color:#000
+    style SWIFT_UI fill:#fff,stroke:#f08c00,stroke-width:1px,color:#000
+    style SWIFT_VM fill:#fff,stroke:#f08c00,stroke-width:1px,color:#000
+    style HEADLESS_SDK fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style UC fill:#fff,stroke:#2b8a3e,stroke-width:1px,color:#000
+    style NET fill:#e7f5ff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style CACHE fill:#e7f5ff,stroke:#1c7ed6,stroke-width:1px,color:#000
+```
+
 ---
 
 ## 🏛️ Packaging & Linking Type: Static vs. Dynamic

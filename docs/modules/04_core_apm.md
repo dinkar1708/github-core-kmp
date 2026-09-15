@@ -1,33 +1,9 @@
-# 📊 `:core-apm`
+# Module Spec: `:core-apm`
 
-Application Performance Monitoring (APM) and execution telemetry engine.
-
----
-
-## 💡 Core Concept & Architectural Role
-
+## 💡 Architectural Role & Concept
 * **Execution Latency Observability:** Accurately measures operation durations for network queries, cache lookups, and Use Case processing.
-* **Vendor-Agnostic Design:** Does not package vendor-specific SDKs (Firebase/Datadog) into the shared KMP binary, preventing binary bloat and version conflicts.
-* **Zero Overhead:** Employs allocation-free, non-blocking timers executing in $\mathcal{O}(1)$ time with negligible CPU footprint.
-
----
-
-## 📦 Import & Dependencies
-
-### Gradle
-```kotlin
-dependencies {
-    // Consumer applications import the umbrella SDK:
-    implementation("com.github.core:github-core")
-    // Or internal module dependency:
-    implementation(project(":core-apm"))
-}
-```
-
-### Key Kotlin Imports
-```kotlin
-import com.github.core.apm.TraceTimer
-```
+* **Vendor-Agnostic Design:** Does not package proprietary vendor SDKs (Firebase/Datadog) into the shared KMP binary, preventing binary bloat and version conflicts.
+* **Zero Overhead:** Employs allocation-free, non-blocking monotonic timers executing in $\mathcal{O}(1)$ time with negligible CPU footprint (<0.01ms per span).
 
 ---
 
@@ -38,12 +14,15 @@ import com.github.core.apm.TraceTimer
 | Property / Method | Definition & Role |
 | :--- | :--- |
 | `val name: String` | Span identifier (e.g. `"github_search_request"`). |
-| `fun start()` | Captures starting monotonic timestamp. |
+| `fun start(): TraceTimer` | Captures starting monotonic timestamp. |
 | `fun stop(): Long` | Captures terminal timestamp, computes $\Delta t = t_{\text{end}} - t_{\text{start}}$, and returns duration in milliseconds. |
+| `var durationMs: Long` | Recorded execution duration in milliseconds. |
+| `var durationMicroseconds: Long` | Recorded execution duration in microseconds. |
+| `companion inline fun measure(...)` | Inline utility executing a code block and returning `Pair<Result, Long>`. |
 
 ---
 
-## 🔬 Internal Mechanics & Platform Bridging
+## 🔬 Platform Bridging Architecture
 
 ```mermaid
 flowchart TD
@@ -80,33 +59,34 @@ flowchart TD
     style SIGN fill:#fff,stroke:#1c7ed6,stroke-width:1px,color:#000
 ```
 
-### Host Platform Bridging
-Host applications catch durations emitted by `TraceTimer.stop()` and forward them to native APM tools:
+Host applications capture durations emitted by `TraceTimer` and forward them to native APM tools:
 * **Android:** Bridges into `Firebase.performance.newTrace(timer.name).putMetric(...)`.
 * **iOS:** Bridges into Apple `os_signpost` or MetricKit payloads.
 
 ---
 
-## 💻 Usage Pattern
+## 💻 Kotlin Usage Pattern
 
 ```kotlin
 // 1. Start execution timer
-val timer = TraceTimer("repo_search_span")
-timer.start()
+val timer = TraceTimer("repo_search_span").start()
 
 // 2. Perform operation
 val result = searchUseCase.execute("kotlin")
 
 // 3. Stop timer and forward duration
 val elapsedMs = timer.stop()
-println("Search operation completed in ${elapsedMs}ms")
+println("Search operation completed in ${elapsedMs}ms (${timer.durationMicroseconds}µs)")
+
+// Or using the inline measurement helper:
+val (searchResult, duration) = TraceTimer.measure("inline_span") {
+    searchUseCase.execute("compose")
+}
 ```
 
 ---
 
-## 🧪 Verification
-
-```bash
-# Run multiplatform APM unit tests
-./gradlew :core-apm:allTests --rerun-tasks
-```
+## 🧪 Testing Strategy
+* Asserts non-negative duration calculations across consecutive calls.
+* Verifies microsecond precision tracking.
+* Confirms zero heap allocations in `measure { ... }`.

@@ -6,24 +6,18 @@ This document outlines how the **three heterogeneous client applications** consu
 
 ## 🔗 The 3 Client Applications
 
-```text
-                               ┌──────────────────────────────────────────────┐
-                               │               github-core-kmp                │
-                               │       (The Shared Headless SDK Engine)       │
-                               └──────────────────────┬───────────────────────┘
-                                                      │
-              ┌───────────────────────────────────────┼───────────────────────────────────────┐
-              │ (Gradle / Maven Local)                │ (Swift Package Manager / XCFramework) │ (Platform Channel / Dart FFI)
-              ▼                                       ▼                                       ▼
-   ┌────────────────────────────────┐      ┌────────────────────────────────┐      ┌────────────────────────────────┐
-   │    🤖 Android Native App       │      │       🍎 iOS Native App        │      │        📱 Flutter App          │
-   │      github-cruise-android     │      │     github-repo-search-ios     │      │    flutter_riverpod_template   │
-   ├────────────────────────────────┤      ├────────────────────────────────┤      ├────────────────────────────────┤
-   │ • Jetpack Compose UI           │      │ • SwiftUI Presentation         │      │ • Flutter Widgets              │
-   │ • AndroidX ViewModel           │      │ • Native @MainActor VM         │      │ • Riverpod AsyncNotifier       │
-   │ • Kotlin StateFlow             │      │ • Swift async/await            │      │ • Dart Event Loop              │
-   │ • Hilt Dependency Injection    │      │ • Apple ARC Memory Management  │      │ • Platform MethodChannel / FFI │
-   └────────────────────────────────┘      └────────────────────────────────┘      └────────────────────────────────┘
+```mermaid
+flowchart TD
+    SDK["github-core-kmp (Shared Headless SDK Engine)"]
+
+    SDK -->|"Gradle / Maven Local"| ANDROID["Android App (github-cruise-android)<br/>• Jetpack Compose UI<br/>• AndroidX ViewModel + StateFlow<br/>• Hilt DI"]
+    SDK -->|"SPM / XCFramework"| IOS["iOS App (github-repo-search-ios)<br/>• SwiftUI Presentation<br/>• Native @MainActor VM<br/>• Swift async/await"]
+    SDK -->|"Platform Channel / FFI"| FLUTTER["Flutter App (flutter_riverpod_template)<br/>• Flutter Widgets<br/>• Riverpod AsyncNotifier<br/>• Dart Event Loop"]
+
+    style SDK fill:#f8f9fa,stroke:#495057,stroke-width:2px,color:#000
+    style ANDROID fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style IOS fill:#e7f5ff,stroke:#1c7ed6,stroke-width:2px,color:#000
+    style FLUTTER fill:#fff3bf,stroke:#f08c00,stroke-width:2px,color:#000
 ```
 
 ---

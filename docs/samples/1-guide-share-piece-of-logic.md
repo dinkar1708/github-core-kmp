@@ -24,6 +24,43 @@ A comprehensive guide to adopting Kotlin Multiplatform by sharing an isolated pi
 * **Consumer App (`sample/sample-share-piece-of-logic`):** A lightweight client application importing **only** `:core-domain` to perform consistent client-side validation across platforms.
 * **Strict SDK Purity:** The core SDK repository (`github-core-kmp`) has **zero knowledge** of the consumer sample. The sample lives independently in `sample/` and links the SDK via Gradle composite builds.
 
+```mermaid
+flowchart TD
+    subgraph SHARED["Shared KMP Layer (~5-10% Code Reuse)"]
+        DOMAIN[":core-domain<br/>• QueryValidator<br/>• PaginationValidator<br/>• Pure Immutable Models<br/>(ZERO 3rd-party dependencies)"]
+    end
+
+    subgraph ANDROID["🤖 Android App (100% Native Infrastructure)"]
+        AND_UI["Jetpack Compose UI"]
+        AND_VM["AndroidX ViewModel"]
+        AND_NET["Retrofit / OkHttp"]
+        AND_DB["Room / SQLite"]
+
+        AND_UI --> AND_VM
+        AND_VM --> AND_NET
+        AND_VM --> AND_DB
+    end
+
+    subgraph IOS["🍎 iOS App (100% Native Infrastructure)"]
+        IOS_UI["SwiftUI"]
+        IOS_VM["Swift @Observable"]
+        IOS_NET["URLSession / Alamofire"]
+        IOS_DB["CoreData / SwiftData"]
+
+        IOS_UI --> IOS_VM
+        IOS_VM --> IOS_NET
+        IOS_VM --> IOS_DB
+    end
+
+    AND_VM -->|Client Validation| DOMAIN
+    IOS_VM -->|Client Validation| DOMAIN
+
+    style SHARED fill:#d3f9d8,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style DOMAIN fill:#fff,stroke:#2b8a3e,stroke-width:2px,color:#000
+    style ANDROID fill:#e7f5ff,stroke:#1c7ed6,stroke-width:1px,color:#000
+    style IOS fill:#fff3bf,stroke:#f08c00,stroke-width:1px,color:#000
+```
+
 ---
 
 ## 🏛️ Packaging & Linking Type: Static vs. Dynamic

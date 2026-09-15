@@ -1,86 +1,68 @@
-# GitHub Core KMP Documentation Portal
+# 📚 GitHub Core KMP Documentation Portal
 
-Welcome to the technical documentation for **`github-core-kmp`**, an enterprise-grade Headless Kotlin Multiplatform (KMP) SDK engine.
-
----
-
-## Documentation Index
-
-### Core SDK Modules & Architecture Deep Dives
-
-| Module | Description | Detailed Documentation | Overview |
-| :--- | :--- | :--- | :--- |
-| **`:github-core` (Umbrella SDK)** | Public facade and distribution entrypoint (`GithubCoreSdk.create()`), packaging for Android AAR, iOS XCFramework, and Flutter. | [Detailed README](../github-core/README.md) | [Overview](./github-core/README.md) |
-| **`:core-domain` (Core Business Logic)** | Pure Kotlin business models (`Repository`, `User`, `SearchResult`), validation rules (`QueryValidator`), error taxonomy, and Use Cases. | [Detailed README](../core-domain/README.md) | [Overview](./core-domain/README.md) |
-| **`:core-network` (Ktor Networking)** | Ktor 3.x multiplatform client (OkHttp / Darwin), DTO mappers, and resilience stack (Circuit Breaker, Retries, Rate Limit Tracker). | [Detailed README](../core-network/README.md) | [Overview](./core-network/README.md) |
-| **`:core-cache` (Local Persistence)** | In-memory and offline caching engine, TTL freshness policies, and cold-start acceleration. | [Detailed README](../core-cache/README.md) | [Overview](./core-cache/README.md) |
-| **`:core-apm` (Telemetry & APM)** | High-precision `TraceTimer`, metric dispatching, and vendor-agnostic APM integration (Firebase, Datadog, MetricKit). | [Detailed README](../core-apm/README.md) | [Overview](./core-apm/README.md) |
-
-### Architecture Standards & Authoritative References
-
-- 📚 [**Architecture, Platform & Technical References (`docs/references.md`)**](./references.md): Comprehensive catalog of official platform standards, JetBrains KMP guidelines, Clean Architecture references, Ktor/Kotlinx docs, enterprise case studies (Netflix, Cash App, Slack), and the Architectural Traceability Matrix.
-- 🤝 [**Contributing Guidelines (`docs/CONTRIBUTING.md`)**](./CONTRIBUTING.md): Branch naming conventions, Conventional Commits specification, multi-environment workflow (`dev` → `stg` → `main`), headless architecture guardrails, and verification checklists.
-
-### Client Adoption Guides (JetBrains Official Paradigms)
-
-Detailed consumer guides demonstrating how external frontends adopt the SDK are organized in [**`docs/samples/`**](./samples/README.md).
-
-| Official JetBrains Paradigm | What is Shared? | Integration Guide | Executable Sample Project |
-| :--- | :--- | :--- | :--- |
-| [**1. Share a piece of logic**](https://kotlinlang.org/multiplatform/#choose-share-what-piece-of-logic) | Validation rules & domain models only (Zero third-party deps) | [1. Read Guide](./samples/1-guide-share-piece-of-logic.md) | [`sample/sample-share-piece-of-logic`](../sample/sample-share-piece-of-logic) |
-| [**2. Share logic but keep UI native**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui) | Full Headless SDK engine (Network, Cache, Use Cases) + 100% Native UI | • [2. Android Guide](./samples/2-guide-share-logic-native-ui-android.md)<br>• [2. iOS Guide](./samples/2-guide-share-logic-native-ui-ios.md) | • [`sample/sample-share-logic-native-ui-android`](../sample/sample-share-logic-native-ui-android)<br>• [`sample/sample-share-logic-native-ui-ios`](../sample/sample-share-logic-native-ui-ios) |
-| [**3. Share both logic and UI**](https://kotlinlang.org/multiplatform/#choose-share-what-both-logic-ui) | Shared SDK logic + Shared Compose Multiplatform UI across platforms | [3. Read Guide](./samples/3-guide-share-both-logic-and-ui.md) | [`sample/sample-share-both-logic-and-ui`](../sample/sample-share-both-logic-and-ui) |
+Welcome to the technical documentation portal for **`github-core-kmp`**, an enterprise-grade Headless Kotlin Multiplatform (KMP) SDK engine.
 
 ---
 
-### Architecture & Component Flow
+## 🧭 Documentation Index
 
-> [!NOTE]
-> This architecture implements JetBrains' official Kotlin Multiplatform architectural tier: [**"One logic layer, native experience" (`logic-native-ui`)**](https://kotlinlang.org/multiplatform/#choose-share-what-logic-native-ui). The shared engine handles all data models, validations, networking, and caching, while native client frontends maintain complete autonomy over UI and presentation state.
-
-```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                   github-core-kmp (Pure SDK Engine)                    │
-│                                                                        │
-│   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐          │
-│   │ :core-domain │ ◄── │:core-network │ ◄── │ :core-cache  │          │
-│   │ (Use Cases)  │     │(Ktor Client) │     │ (Storage)    │          │
-│   └──────▲───────┘     └──────────────┘     └──────────────┘          │
-│          │                    │                    │                  │
-│          └────────────────────┼────────────────────┘                  │
-│                               │                                        │
-│                        ┌──────▼───────┐                               │
-│                        │  :core-apm   │ (TraceTimer / APM)            │
-│                        └──────▲───────┘                               │
-│                               │                                        │
-│                     ┌─────────┴──────────┐                            │
-│                     │    :github-core    │ (Umbrella SDK Facade)      │
-│                     └─────────┬──────────┘                            │
-└───────────────────────────────┼────────────────────────────────────────┘
-                                │
-                                ▼
-         Strict Headless Boundary (Zero UI or ViewModels in Core)
-                                │
-      ┌─────────────────────────┼─────────────────────────┐
-      ▼                         ▼                         ▼
-   1. Piece of Logic        2. Logic + Native UI      3. Logic + Shared UI
-  (sample-share-piece-      (sample-share-logic-      (sample-share-both-logic-
-   of-logic)                 native-ui-android & ios)  and-ui)
-  Imports ONLY :core-domain  • Android (Compose)       Compose Multiplatform
-  for query validation       • iOS (SwiftUI)           across Android/iOS/Desktop
-```
+### 🌟 Executive Review & Onboarding
+- [**00_START_HERE.md (Reviewer Guide)**](./00_START_HERE.md): Executive summary, 2-minute architectural walk-through, and reviewer checklist.
 
 ---
 
-## Quick Test Commands
+### 🏛️ Architecture Decision Records (ADRs)
+Documenting significant technical trade-offs according to Michael Nygard's standard in [**`docs/adr/`**](./adr/README.md):
+- [**ADR 001: Headless Boundary vs. Shared ViewModels**](./adr/001_headless_boundary_vs_shared_viewmodel.md)
+- [**ADR 002: Dual Platform Ktor Engines (`Darwin` & `OkHttp`)**](./adr/002_dual_engine_ktor_darwin_okhttp.md)
+- [**ADR 003: In-Engine Circuit Breaker & RateLimitTracker**](./adr/003_resilience_circuit_breaker.md)
+- [**ADR 004: Thread-Safe In-Memory TTL & LRU Caching**](./adr/004_in_memory_ttl_cache_eviction.md)
+- [**ADR 005: Monotonic TraceTimer vs. Third-Party APM SDKs**](./adr/005_vendor_neutral_apm_spans.md)
 
-```bash
-# Run all tests across all KMP modules
-./gradlew check
+---
 
-# Build the Android sample application
-cd sample/sample-share-logic-native-ui-android && ./gradlew assembleDebug
+### 🏗️ Deep-Dive Architecture Specifications
+In-depth technical guides located in [**`docs/architecture/`**](./architecture/README.md):
+- [**01. Clean Architecture & Module Boundary**](./architecture/01_clean_architecture_and_boundary.md): Inward dependency rules, domain isolation, and facade transitive exports.
+- [**02. Resilience & Circuit Breaker State Machine**](./architecture/02_resilience_and_circuit_breaker.md): 3-state state machine, proactive rate-limit header parsing, and backoff classification.
+- [**03. Concurrency & Memory Safety**](./architecture/03_concurrency_and_memory_safety.md): Mutex synchronization, structured concurrency, and iOS ARC retain-cycle elimination.
 
-# Build the iOS sample application
-cd sample/sample-share-logic-native-ui-ios && xcodebuild -project sample-iOS.xcodeproj -scheme sample-iOS -destination 'generic/platform=iOS Simulator' build
-```
+---
+
+### ⏱️ Performance Benchmarks & Telemetry
+Microbenchmarks, memory allocations, and artifact size analyses in [**`docs/benchmarks/`**](./benchmarks/README.md):
+- [**01. SDK Performance & Footprint Analysis**](./benchmarks/01_sdk_performance_and_footprint.md): In-memory cache speed (<1ms), API roundtrips, factory startup (<4ms), and AAR/XCFramework sizes.
+
+---
+
+### 📱 Client Integration Blueprints
+Practical consumption guides for heterogeneous mobile frontends in [**`docs/integration/`**](./integration/README.md):
+- [**01. Android Jetpack Compose Integration**](./integration/01_android_jetpack_compose_guide.md): Gradle dependency, Hilt injection, AndroidX `ViewModel`, and Compose UI binding.
+- [**02. Apple iOS SwiftUI Integration**](./integration/02_ios_swiftui_spm_guide.md): SPM package linking, Swift Concurrency (`async/await`), `@Observable`, and SwiftUI.
+- [**03. Flutter Riverpod Integration**](./integration/03_flutter_riverpod_bridge_guide.md): Platform MethodChannel / FFI bridging and Riverpod `AsyncNotifier`.
+
+---
+
+### 🧪 JetBrains Official Code-Sharing Paradigms
+Adoption blueprints demonstrating the 3 official JetBrains tiers in [**`docs/samples/`**](./samples/README.md):
+- [**Tier 1: Share a piece of logic**](./samples/1-guide-share-piece-of-logic.md): Consuming pure `:core-domain` input validation with zero third-party dependencies.
+- [**Tier 2: Share logic, keep UI native**](./samples/2-guide-share-logic-native-ui-android.md): Full headless core engine driving native Android Compose and [**iOS SwiftUI**](./samples/2-guide-share-logic-native-ui-ios.md).
+- [**Tier 3: Share both logic and UI**](./samples/3-guide-share-both-logic-and-ui.md): Compose Multiplatform sharing both logic and presentation UI.
+
+---
+
+### 📦 Core SDK Module Documentation
+Comprehensive module specifications and responsibility catalog in [**`docs/modules/`**](./modules/README.md):
+- [**Catalog Overview & Dependency Graph**](./modules/README.md): Multi-module Clean Architecture diagram and test commands.
+- [**:core-domain Module Spec**](./modules/01_core_domain.md): Pure domain entities, validations, Use Cases, error taxonomy ([Local README](../core-domain/README.md)).
+- [**:core-network Module Spec**](./modules/02_core_network.md): Ktor 3.x client, resilience stack, Circuit Breaker, DTO mappers ([Local README](../core-network/README.md)).
+- [**:core-cache Module Spec**](./modules/03_core_cache.md): Thread-safe in-memory Mutex store, TTL freshness, LRU capacity bounds ([Local README](../core-cache/README.md)).
+- [**:core-apm Module Spec**](./modules/04_core_apm.md): Monotonic `TraceTimer`, microsecond span profiling ([Local README](../core-apm/README.md)).
+- [**:github-core Module Spec**](./modules/05_github_core.md): Public SDK entry point, `GithubCoreSdk.create()`, AAR & XCFramework distribution ([Local README](../github-core/README.md)).
+
+
+---
+
+### 📖 Standards & Governance
+- [**Technical References (`docs/references.md`)**](./references.md): Comprehensive catalog of official platform standards, JetBrains KMP guidelines, RFCs, and security specifications.
+- [**Contributing Guidelines (`docs/CONTRIBUTING.md`)**](./CONTRIBUTING.md): Git workflow, branching strategies (`dev` ➔ `stg` ➔ `main`), and Conventional Commits standards.
