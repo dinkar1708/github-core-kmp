@@ -1,47 +1,19 @@
-# 🌐 `:core-network`
+# Module Spec: `:core-network`
 
 > 📖 **Official Standards & References:**  
-> • [Ktor Client: Creating a Multiplatform Application](https://ktor.io/docs/client-create-multiplatform-application.html)  
-> • [Apple Developer: NSURLSession & App Transport Security](https://developer.apple.com/documentation/foundation/urlsession)  
-> • [Square: OkHttp](https://square.github.io/okhttp/)  
-> • [Martin Fowler: Circuit Breaker](https://martinfowler.com/bliki/CircuitBreaker.html)
+> • [Ktor: Creating Multiplatform HTTP Client](https://ktor.io/docs/client-create-multiplatform-application.html)  
+> • [Apple Developer: NSURLSession & App Transport Security (ATS)](https://developer.apple.com/documentation/foundation/urlsession)  
+> • [Square: OkHttp Architecture & Connection Pooling](https://square.github.io/okhttp/)  
+> • [GitHub REST API: Rate Limits & Header Specifications](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api)
 
-Resilient multiplatform HTTP networking layer powered by Ktor Client 3.x.
-
----
-
-## 💡 Core Concept & Architectural Role
-
+## 💡 Architectural Role & Concept
 * **Native Platform Engines:** Leverages native HTTP engines per platform (`OkHttp` on Android/JVM for connection pooling, `Darwin` via Apple `NSURLSession` on iOS).
 * **Enterprise Resilience Triad:** Wraps every network call in **Rate Limit Tracking**, a **Circuit Breaker**, and an **Exponential Backoff Retry Policy**.
 * **DTO Schema Isolation:** Isolates volatile external GitHub JSON DTOs from consumer applications by converting them into pure `:core-domain` models.
 
 ---
 
-## 📦 Import & Dependencies
-
-### Gradle
-```kotlin
-dependencies {
-    // Consumer applications import the umbrella SDK:
-    implementation("com.github.core:github-core")
-    // Or internal module dependency:
-    implementation(project(":core-network"))
-}
-```
-
-### Key Kotlin Imports
-```kotlin
-import com.github.core.network.GithubNetworkClient
-import com.github.core.network.api.GithubApiService
-import com.github.core.network.resilience.CircuitBreaker
-import com.github.core.network.resilience.RateLimitTracker
-import com.github.core.network.resilience.RetryPolicy
-```
-
----
-
-## 🔑 Key Definitions & Components
+## 🔑 Key Components
 
 | Component | Definition & Role |
 | :--- | :--- |
@@ -95,7 +67,7 @@ flowchart TD
 
 ---
 
-## 💻 Usage Pattern
+## 💻 Kotlin Usage Pattern
 
 ```kotlin
 // 1. Initialize client and service
@@ -111,12 +83,6 @@ result.onSuccess { searchResult ->
 
 ---
 
-## 🧪 Verification
-
-```bash
-# Run offline MockEngine tests (CI safe)
-./gradlew :core-network:allTests --rerun-tasks
-
-# Run real live integration test against api.github.com
-./gradlew :core-network:testAndroidHostTest --rerun-tasks
-```
+## 🧪 Testing Strategy
+* **Offline MockEngine Tests:** Utilizes Ktor's `MockEngine` with realistic JSON payloads to verify serialization, query parameters, header decoding, and error mapping without touching the real internet.
+* **Live Host Tests:** Dedicated integration suite executing real calls to `api.github.com` via `./gradlew :core-network:testAndroidHostTest`.

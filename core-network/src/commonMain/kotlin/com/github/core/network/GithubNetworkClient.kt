@@ -7,6 +7,9 @@ import io.ktor.client.HttpClient
 class GithubNetworkClient(
     val httpClient: HttpClient = GithubHttpClientFactory.create()
 ) {
+    constructor(authToken: String? = null, baseUrl: String = "https://api.github.com") :
+            this(GithubHttpClientFactory.create(baseUrl = baseUrl, authToken = authToken))
+
     val apiService: GithubApiService by lazy {
         GithubApiService(httpClient)
     }

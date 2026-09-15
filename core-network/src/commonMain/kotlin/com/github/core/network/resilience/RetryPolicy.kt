@@ -27,6 +27,10 @@ class RetryPolicy(
             }
 
             val error = result.exceptionOrNull()
+            if (error is kotlinx.coroutines.CancellationException) {
+                throw error
+            }
+
             if (!isRetriable(error) || attempt == maxRetries) {
                 if (attempt > 1) {
                     println("🛑 [RetryPolicy] '$operationName' exhausted all $maxRetries retry attempts: ${error?.message}")
@@ -43,10 +47,11 @@ class RetryPolicy(
     }
 
     fun isRetriable(error: Throwable?): Boolean {
-        if (error == null) return false
+        if (error == null || error is kotlinx.coroutines.CancellationException) return false
         return when (error) {
             is DomainError.ValidationError -> false
             is DomainError.NotFoundError -> false
+            is DomainError.RateLimitExceededError -> false
             is DomainError.NetworkError -> {
                 val code = error.statusCode
                 // 4xx client errors (except 429 Too Many Requests or 408 Timeout) are not retriable

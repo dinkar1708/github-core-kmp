@@ -9,6 +9,16 @@ class GetUserRepositoriesUseCase(
     private val repository: GithubRepository,
     private val paginationValidator: PaginationValidator = PaginationValidator()
 ) {
+    /**
+     * Suspending fetch method that throws on failure, mapping directly to Swift async/await try/catch.
+     */
+    @Throws(Exception::class)
+    suspend fun get(
+        username: String,
+        page: Int = 1,
+        perPage: Int = 30
+    ): List<Repository> = execute(username, page, perPage).getOrThrow()
+
     suspend fun execute(
         username: String,
         page: Int = 1,
